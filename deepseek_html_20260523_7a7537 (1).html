@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>DMMHS | Secure Staff Login — Official Portal</title>
+  <!-- Google Fonts + Icons (minimal, smooth) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: background 0.3s ease, color 0.2s;
+    }
+
+    /* DARK MODE STYLES (professional) */
+    body.dark {
+      background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+    }
+
+    /* glassmorphism card base */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      transition: background 0.3s, border 0.2s, box-shadow 0.3s;
+    }
+
+    body.dark .glass-card {
+      background: rgba(15, 25, 45, 0.7);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    }
+
+    /* main container */
+    .login-wrapper {
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
+      animation: fadeUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    /* ========= NEW HEADER WITH SCHOOL LOGO (NO CROPPING) ========= */
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .school-logo-wrapper {
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(4px);
+      border-radius: 1.2rem;
+      padding: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    body.dark .school-logo-wrapper {
+      background: rgba(10, 20, 35, 0.5);
+    }
+
+    .school-logo-img {
+      display: block;
+      max-width: 95px;
+      max-height: 95px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      /* No cropping: preserves full image, no overflow hidden */
+      background: transparent;
+    }
+
+    .title-block {
+      text-align: left;
+    }
+
+    .title-block h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      background: linear-gradient(130deg, #1b3a5c, #2b6a9e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    body.dark .title-block h1 {
+      background: linear-gradient(130deg, #cbd5e6, #90b4db);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subhead {
+      font-size: 0.8rem;
+      color: #2c3e4e;
+      margin-top: 0.25rem;
+      font-weight: 500;
+    }
+
+    body.dark .subhead {
+      color: #b9c7d9;
+    }
+
+    /* form container spacing */
+    .form-container {
+      padding: 2rem 2rem 2rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #5f7f9e;
+      font-size: 1.1rem;
+      transition: color 0.2s;
+    }
+
+    body.dark .input-group i {
+      color: #94a3b8;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 2.7rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: 1.5px solid rgba(0, 0, 0, 0.1);
+      border-radius: 1.5rem;
+      background: rgba(255, 255, 255, 0.7);
+      outline: none;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+      color: #1e293b;
+    }
+
+    body.dark .input-group input {
+      background: rgba(20, 30, 55, 0.8);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #f1f5f9;
+    }
+
+    .input-group input:focus {
+      border-color: #2c5282;
+      box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.25);
+      background: white;
+    }
+
+    body.dark .input-group input:focus {
+      border-color: #5d9bcf;
+      box-shadow: 0 0 0 3px rgba(93, 155, 207, 0.3);
+      background: #0f172ad9;
+    }
+
+    /* remember + forgot row */
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0 1.8rem;
+      font-size: 0.8rem;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    body.dark .checkbox-label {
+      color: #cbd5e6;
+    }
+
+    .checkbox-label input {
+      accent-color: #2c5282;
+      width: 1rem;
+      height: 1rem;
+      margin: 0;
+    }
+
+    .forgot-link {
+      color: #2c5282;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    body.dark .forgot-link {
+      color: #7aa9d6;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+
+    /* CTA button */
+    .login-btn {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 2rem;
+      border: none;
+      background: linear-gradient(95deg, #1b3a5c, #2c5282);
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(95deg, #0f2c48, #1e4468);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.15);
+    }
+
+    .login-btn:hover i {
+      transform: translateX(4px);
+    }
+
+    /* SECURITY BADGE (new element for "security log in") */
+    .security-badge {
+      margin-top: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: rgba(44, 82, 130, 0.12);
+      backdrop-filter: blur(4px);
+      padding: 0.5rem 0.8rem;
+      border-radius: 3rem;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      color: #1e3b4f;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark .security-badge {
+      background: rgba(44, 82, 130, 0.25);
+      color: #cbd5f0;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .security-badge i {
+      font-size: 0.85rem;
+    }
+
+    /* demo hint card */
+    .demo-note {
+      margin-top: 1.5rem;
+      background: rgba(27, 58, 92, 0.08);
+      backdrop-filter: blur(4px);
+      padding: 0.7rem 1rem;
+      border-radius: 1.2rem;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #1e3b4f;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark .demo-note {
+      background: rgba(44, 82, 130, 0.2);
+      color: #cbd5f0;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .demo-note span {
+      font-family: monospace;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 40px;
+      display: inline-block;
+      margin: 0 2px;
+      font-weight: 600;
+    }
+
+    /* dark mode toggle (glassmorphism switch) */
+    .theme-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.8rem;
+      z-index: 200;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      padding: 0.6rem 1rem;
+      border-radius: 3rem;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      color: #1e293b;
+    }
+
+    body.dark .theme-toggle {
+      background: rgba(20, 30, 55, 0.8);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #e2e8f0;
+    }
+
+    .theme-toggle i {
+      font-size: 1rem;
+      transition: 0.2s;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(0.97);
+    }
+
+    /* footer text */
+    .footer-meta {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+      color: #475569;
+    }
+
+    body.dark .footer-meta {
+      color: #94a3b8;
+    }
+
+    /* animation */
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* responsiveness */
+    @media (max-width: 550px) {
+      .form-container {
+        padding: 1.8rem 1.5rem;
+      }
+      .brand-header {
+        gap: 0.8rem;
+        justify-content: center;
+      }
+      .school-logo-img {
+        max-width: 70px;
+        max-height: 70px;
+      }
+      .title-block h1 {
+        font-size: 1.4rem;
+      }
+      .theme-toggle {
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 0.9rem;
+      }
+      .subhead {
+        font-size: 0.7rem;
+      }
+    }
+
+    /* loading overlay */
+    .loading-shield {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      color: white;
+      font-weight: 600;
+    }
+
+    .loading-shield i {
+      font-size: 2.5rem;
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dark/Light mode toggle (glass, animated) -->
+  <div class="theme-toggle" id="themeToggleBtn">
+    <i class="fas fa-moon" id="themeIcon"></i>
+    <span id="themeLabel">Dark mode</span>
+  </div>
+
+  <!-- main login card container -->
+  <div class="login-wrapper">
+    <div class="glass-card">
+      <div class="form-container">
+        
+        <!-- NEW HEADER: SCHOOL LOGO (full image, no cropping) + Title block -->
+        <div class="brand-header">
+          <div class="school-logo-wrapper">
+            <!-- IMPORTANT: The original photo is displayed without any cropping (object-fit: contain, full image visible) -->
+            <img class="school-logo-img" src="593594854_2485959678527090_5000754208444009057_n.jpg" alt="DMMHS One Team FIS 2001 Official School Logo" title="DMMHS · One Team FIS 2001">
+          </div>
+          <div class="title-block">
+            <h1>DMMHS Portal</h1>
+            <p class="subhead">Diosdado Macapagal Memorial Highschool<br>Performance Dashboard Access</p>
+          </div>
+        </div>
+
+        <!-- login form -->
+        <form id="loginForm" action="#" method="post">
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="emailInput" placeholder="Principal / Teacher email" value="admin@dmmhs.edu.ph" required autocomplete="off">
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="passwordInput" placeholder="Password" value="dmmhs2025" required>
+          </div>
+          <div class="options-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberCheck"> <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-link" id="forgotLink">Forgot password?</a>
+          </div>
+          <button type="submit" class="login-btn" id="loginBtn">
+            <span>Access Dashboard</span> <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- ENHANCED SECURITY LOGIN INDICATOR (glass badge + security messaging) -->
+        <div class="security-badge">
+          <i class="fas fa-shield-alt"></i>
+          <span>256‑bit SSL · Encrypted Session · Role-Based Access</span>
+          <i class="fas fa-lock"></i>
+        </div>
+
+        <!-- demo credentials hint (glass style) -->
+        <div class="demo-note">
+          <i class="fas fa-laptop-code" style="margin-right: 6px;"></i> Demo credentials: <span>admin@dmmhs.edu.ph</span> / <span>dmmhs2025</span>
+          <br>🔐 Click to explore complete school analytics
+        </div>
+      </div>
+    </div>
+    <div class="footer-meta">
+      <i class="fas fa-chalkboard-user"></i> Secure Staff Access | Data-driven excellence • Powered by DMMHS IT Security
+    </div>
+  </div>
+
+  <!-- loading overlay for smooth transition simulation -->
+  <div id="loadingOverlay" class="loading-shield">
+    <i class="fas fa-spinner"></i>
+    <div>Redirecting to DMMHS Dashboard ...</div>
+  </div>
+
+  <script>
+    // ------------- DARK / LIGHT MODE GLASS MORPHISM -------------
+    const themeToggle = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const body = document.body;
+
+    // check saved preference or system
+    const savedTheme = localStorage.getItem('dmmhs_theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark');
+      themeIcon.className = 'fas fa-sun';
+      themeLabel.innerText = 'Light mode';
+    } else if (savedTheme === 'light') {
+      body.classList.remove('dark');
+      themeIcon.className = 'fas fa-moon';
+      themeLabel.innerText = 'Dark mode';
+    } else {
+      // default: light mode (clean professional)
+      body.classList.remove('dark');
+      themeIcon.className = 'fas fa-moon';
+      themeLabel.innerText = 'Dark mode';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (body.classList.contains('dark')) {
+        body.classList.remove('dark');
+        localStorage.setItem('dmmhs_theme', 'light');
+        themeIcon.className = 'fas fa-moon';
+        themeLabel.innerText = 'Dark mode';
+      } else {
+        body.classList.add('dark');
+        localStorage.setItem('dmmhs_theme', 'dark');
+        themeIcon.className = 'fas fa-sun';
+        themeLabel.innerText = 'Light mode';
+      }
+      themeToggle.style.transform = 'scale(0.96)';
+      setTimeout(() => { themeToggle.style.transform = ''; }, 150);
+    });
+
+    // ---------- LOGIN HANDLER (animate + redirect to full dashboard) ----------
+    const loginForm = document.getElementById('loginForm');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const rememberCheck = document.getElementById('rememberCheck');
+
+    if (localStorage.getItem('dmmhs_remember') === 'true') {
+      const savedEmail = localStorage.getItem('dmmhs_email');
+      if (savedEmail) emailInput.value = savedEmail;
+      rememberCheck.checked = true;
+    }
+
+    const forgotLink = document.getElementById('forgotLink');
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const toastMsg = document.createElement('div');
+      toastMsg.innerText = '📧 Password reset link sent to your registered email (demo mode).';
+      toastMsg.style.position = 'fixed';
+      toastMsg.style.bottom = '20px';
+      toastMsg.style.left = '50%';
+      toastMsg.style.transform = 'translateX(-50%)';
+      toastMsg.style.background = body.classList.contains('dark') ? '#1e293b' : '#ffffff';
+      toastMsg.style.color = body.classList.contains('dark') ? '#e2e8f0' : '#0f172a';
+      toastMsg.style.backdropFilter = 'blur(12px)';
+      toastMsg.style.padding = '0.8rem 1.5rem';
+      toastMsg.style.borderRadius = '2rem';
+      toastMsg.style.fontSize = '0.8rem';
+      toastMsg.style.fontWeight = '600';
+      toastMsg.style.border = '1px solid rgba(0,0,0,0.1)';
+      toastMsg.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)';
+      toastMsg.style.zIndex = '999';
+      toastMsg.style.fontFamily = 'Inter, sans-serif';
+      document.body.appendChild(toastMsg);
+      setTimeout(() => {
+        toastMsg.style.opacity = '0';
+        setTimeout(() => toastMsg.remove(), 400);
+      }, 2000);
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      const pwd = passwordInput.value.trim();
+
+      if (email === '' || pwd === '') {
+        const alertDiv = document.createElement('div');
+        alertDiv.innerText = '❌ Please enter both email and password.';
+        alertDiv.style.position = 'fixed';
+        alertDiv.style.top = '20px';
+        alertDiv.style.left = '50%';
+        alertDiv.style.transform = 'translateX(-50%)';
+        alertDiv.style.background = '#f1f5f9cc';
+        alertDiv.style.backdropFilter = 'blur(10px)';
+        alertDiv.style.padding = '0.7rem 1.3rem';
+        alertDiv.style.borderRadius = '40px';
+        alertDiv.style.fontWeight = '500';
+        alertDiv.style.fontSize = '0.8rem';
+        alertDiv.style.color = '#c0392b';
+        alertDiv.style.border = '1px solid #e74c3c66';
+        alertDiv.style.zIndex = '2000';
+        document.body.appendChild(alertDiv);
+        setTimeout(() => alertDiv.remove(), 2000);
+        return;
+      }
+
+      if (email === 'admin@dmmhs.edu.ph' && pwd === 'dmmhs2025') {
+        if (rememberCheck.checked) {
+          localStorage.setItem('dmmhs_remember', 'true');
+          localStorage.setItem('dmmhs_email', email);
+        } else {
+          localStorage.removeItem('dmmhs_remember');
+          localStorage.removeItem('dmmhs_email');
+        }
+        loadingOverlay.style.display = 'flex';
+        setTimeout(() => {
+          const dashboardHTML = getDashboardHTML();
+          document.open();
+          document.write(dashboardHTML);
+          document.close();
+        }, 1200);
+      } else {
+        const errorToast = document.createElement('div');
+        errorToast.innerText = '⚠️ Invalid credentials. Use admin@dmmhs.edu.ph / dmmhs2025';
+        errorToast.style.position = 'fixed';
+        errorToast.style.bottom = '30px';
+        errorToast.style.left = '50%';
+        errorToast.style.transform = 'translateX(-50%)';
+        errorToast.style.background = '#e2e8f0dd';
+        errorToast.style.backdropFilter = 'blur(12px)';
+        errorToast.style.padding = '0.7rem 1.4rem';
+        errorToast.style.borderRadius = '3rem';
+        errorToast.style.fontSize = '0.8rem';
+        errorToast.style.fontWeight = '600';
+        errorToast.style.color = '#b91c1c';
+        errorToast.style.border = '1px solid #ef444480';
+        errorToast.style.zIndex = '2000';
+        document.body.appendChild(errorToast);
+        setTimeout(() => errorToast.remove(), 2500);
+      }
+    });
+
+    // ----- UPDATED DASHBOARD HTML with LOGO in HEADER (no changes to logo) -----
+    function getDashboardHTML() {
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DMMHS — Complete School Performance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>
+  <style>
+    :root {
+      --navy: #1b3a5c; --navy-light: #2c5282; --bg: #eef2f7; --card: #fff;
+      --text: #1a202c; --muted: #64748b; --green: #27ae60; --red: #c0392b;
+      --orange: #e67e22; --purple: #8e44ad; --blue: #3498db; --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; }
+    .header {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      color: #fff; padding: 1.2rem 2rem;
+    }
+    .header-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+    .logo-title-group { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .dashboard-logo {
+      max-width: 75px;
+      max-height: 75px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      background: rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 6px;
+      transition: transform 0.2s;
+    }
+    .dashboard-logo:hover { transform: scale(1.02); }
+    .title-text h1 { font-size: 1.5rem; font-weight: 700; margin: 0; line-height: 1.2; }
+    .title-text .sub { font-size: 0.75rem; opacity: 0.92; margin-top: 0.2rem; }
+    .header-meta { text-align: right; font-size: 0.75rem; opacity: 0.92; }
+    .filter-bar {
+      background: var(--card); border-bottom: 2px solid var(--border);
+      padding: 0.85rem 2rem; display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+      position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .filter-group { display: flex; align-items: center; gap: 0.5rem; }
+    .filter-group label { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .filter-group select {
+      padding: 0.5rem 0.85rem; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.88rem; min-width: 160px; background: #fff;
+    }
+    .btn {
+      padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;
+      font-size: 0.85rem; font-weight: 600; background: var(--navy); color: #fff;
+    }
+    .btn:hover { background: var(--navy-light); }
+    .nav-tabs {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 1rem 2rem 0;
+      max-width: 1500px; margin: 0 auto;
+    }
+    .nav-tab {
+      padding: 0.55rem 1rem; border: 1px solid var(--border); background: var(--card);
+      border-radius: 8px 8px 0 0; cursor: pointer; font-size: 0.82rem; font-weight: 600; color: var(--muted);
+    }
+    .nav-tab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .container { max-width: 1500px; margin: 0 auto; padding: 1rem 2rem 2.5rem; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .section-title {
+      font-size: 1.1rem; color: var(--navy); font-weight: 700; margin: 1.25rem 0 0.75rem;
+      padding-bottom: 0.35rem; border-bottom: 2px solid var(--orange);
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .kpi {
+      background: var(--card); border-radius: 10px; padding: 1rem;
+      border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .kpi .label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+    .kpi .value { font-size: 1.55rem; font-weight: 800; color: var(--navy); margin: 0.25rem 0; }
+    .kpi .sub { font-size: 0.72rem; color: var(--muted); }
+    .kpi .sub.up { color: var(--green); }
+    .kpi .sub.down { color: var(--red); }
+    .kpi.warn { border-left: 4px solid var(--orange); }
+    .kpi.danger { border-left: 4px solid var(--red); }
+    .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem; }
+    .chart-grid.three { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 1100px) { .chart-grid, .chart-grid.three { grid-template-columns: 1fr; } }
+    .chart-card {
+      background: var(--card); border-radius: 10px; padding: 1rem 1.15rem;
+      border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .chart-card.full { grid-column: 1 / -1; }
+    .chart-card h4 { font-size: 0.88rem; color: var(--navy); margin-bottom: 0.65rem; font-weight: 700; }
+    .chart-box { position: relative; height: 270px; }
+    .chart-box.sm { height: 220px; }
+    .chart-box.lg { height: 340px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th, td { padding: 0.5rem 0.6rem; text-align: left; border: 1px solid var(--border); }
+    th { background: var(--navy); color: #fff; font-weight: 600; position: sticky; top: 0; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    tr:hover td { background: #edf2f7; }
+    .heat-high { background: #fadbd8 !important; color: #922b21; font-weight: 600; }
+    .heat-med { background: #fdebd0 !important; color: #935116; }
+    .heat-low { background: #d5f5e3 !important; color: #1e8449; }
+    .table-wrap { overflow-x: auto; background: var(--card); border-radius: 10px; padding: 0.75rem; border: 1px solid var(--border); margin-bottom: 1rem; }
+    .footer { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 2rem; padding: 1rem; border-top: 1px solid var(--border); }
+    @media print { .filter-bar, .nav-tabs, .btn { display: none !important; } .section { display: block !important; page-break-inside: avoid; } .chart-box { height: 200px; } }
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-top">
+    <div class="logo-title-group">
+      <!-- Official School Logo - no cropping, original image preserved -->
+      <img class="dashboard-logo" src="593594854_2485959678527090_5000754208444009057_n.jpg" alt="DMMHS Official Logo | One Team FIS 2001" title="DMMHS One Team FIS 2001">
+      <div class="title-text">
+        <h1>Diosdado Macapagal Memorial Highschool</h1>
+        <p class="sub">Complete School Performance Dashboard — Enrollment, Retention, Teacher Allocation, Classroom Utilization & SHS Strand Analysis | Public Secondary School | SY 2021–2026</p>
+      </div>
+    </div>
+    <div class="header-meta"><div id="genDate"></div><div>Users: Principal · Dept. Heads · Finance · Operations</div></div>
+  </div>
+</header>
+<div class="filter-bar"><div class="filter-group"><label>School Year</label><select id="fSY"></select></div><div class="filter-group"><label>Grade</label><select id="fGrade"><option value="all">All Grades</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div><div class="filter-group"><label>Program</label><select id="fProgram"><option value="all">All</option><option value="jhs">JHS (7–10)</option><option value="shs">SHS (11–12)</option></select></div><button class="btn" onclick="window.print()">Print Dashboard</button><button class="btn" style="background:#27ae60" onclick="resetFilters()">Reset Filters</button></div>
+<nav class="nav-tabs" id="navTabs"></nav><div class="container"><section id="sec-summary" class="section active"><h2 class="section-title">Executive Summary — All KPIs</h2><div class="kpi-grid" id="kpiAll12"></div><div class="stat-row" id="statPills"></div><div class="chart-grid"><div class="chart-card full"><h4>Total Enrollment Trend (BOSY)</h4><div class="chart-box lg"><canvas id="c_enrollTrend"></canvas></div></div><div class="chart-card"><h4>Enrollment Growth Rate (%)</h4><div class="chart-box"><canvas id="c_growth"></canvas></div></div><div class="chart-card"><h4>Retention, Dropout, Repeater & Promotion Rates</h4><div class="chart-box"><canvas id="c_ratesTrend"></canvas></div></div></div><div class="insight-box" id="execInsight"></div></section><section id="sec-enrollment" class="section"><h2 class="section-title">Enrollment Analysis</h2><div class="kpi-grid" id="kpiEnroll"></div><div class="chart-grid"><div class="chart-card"><h4>Grade-Level Enrollment Distribution</h4><div class="chart-box"><canvas id="c_gradeDist"></canvas></div></div><div class="chart-card"><h4>Current vs Prior School Year by Grade</h4><div class="chart-box"><canvas id="c_gradeCompare"></canvas></div></div><div class="chart-card full"><h4>Grades 9 & 10 Enrollment Decline (Critical Track)</h4><div class="chart-box"><canvas id="c_g910"></canvas></div></div><div class="chart-card"><h4>JHS vs SHS Enrollment Split</h4><div class="chart-box"><canvas id="c_jhsShs"></canvas></div></div><div class="chart-card"><h4>Enrollment Share by Grade (%)</h4><div class="chart-box"><canvas id="c_gradeShare"></canvas></div></div></div><div class="table-wrap"><h4 style="margin-bottom:0.5rem;color:var(--navy)">Enrollment Data Table</h4><table id="tblEnroll"></table></div></section><section id="sec-retention" class="section"><h2 class="section-title">Retention, Dropout & Repeater Analysis</h2><div class="kpi-grid" id="kpiRetain"></div><div class="chart-grid"><div class="chart-card"><h4>Dropout Cases by Grade</h4><div class="chart-box"><canvas id="c_dropout"></canvas></div></div><div class="chart-card"><h4>Repeater Cases by Grade</h4><div class="chart-box"><canvas id="c_repeater"></canvas></div></div><div class="chart-card full"><h4>Dropout vs Repeater (Stacked)</h4><div class="chart-box"><canvas id="c_stackAttrition"></canvas></div></div><div class="chart-card full"><h4>Dropout Trend by Grade (Heatmap Table)</h4><div class="table-wrap" style="border:none;padding:0"><table id="tblHeatmap"></table></div></div></div><div class="table-wrap"><h4 style="margin-bottom:0.5rem;color:var(--navy)">Attrition Detail Table</h4><table id="tblAttrition"></table></div></section><section id="sec-resources" class="section"><h2 class="section-title">Teachers, Classrooms & Capacity</h2><div class="kpi-grid" id="kpiResource"></div><div class="chart-grid"><div class="chart-card"><h4>Teacher Allocation by Learning Area (JHS)</h4><div class="chart-box"><canvas id="c_teachers"></canvas></div></div><div class="chart-card"><h4>Teacher Allocation Trend (English, Math, Filipino)</h4><div class="chart-box"><canvas id="c_teacherTrend"></canvas></div></div><div class="chart-card"><h4>Student-to-Teacher Ratio (JHS Core Subjects)</h4><div class="chart-box"><canvas id="c_ratio"></canvas></div></div><div class="chart-card"><h4>Classroom Utilization Rate (%) by Grade</h4><div class="chart-box"><canvas id="c_classUtil"></canvas></div></div><div class="chart-card full"><h4>Enrollment vs Classroom Capacity</h4><div class="chart-box"><canvas id="c_enrollVsRoom"></canvas></div></div><div class="chart-card"><h4>Seat Capacity Utilization (%)</h4><div class="chart-box"><canvas id="c_seatUtil"></canvas></div></div><div class="chart-card"><h4>Average Class Size by Grade</h4><div class="chart-box"><canvas id="c_avgClass"></canvas></div></div></div><div class="table-wrap"><h4 style="margin-bottom:0.5rem;color:var(--navy)">Resource Summary Table</h4><table id="tblResource"></table></div></section><section id="sec-strands" class="section"><h2 class="section-title">SHS Strand Enrollment Distribution</h2><div class="kpi-grid" id="kpiStrand"></div><div class="chart-grid"><div class="chart-card"><h4>SHS Strand Distribution (G11+G12)</h4><div class="chart-box"><canvas id="c_strandPie"></canvas></div></div><div class="chart-card"><h4>Strand Share (%)</h4><div class="chart-box"><canvas id="c_strandPct"></canvas></div></div><div class="chart-card"><h4>Grade 11 Strand Enrollment</h4><div class="chart-box"><canvas id="c_strandG11"></canvas></div></div><div class="chart-card"><h4>Grade 12 Strand Enrollment</h4><div class="chart-box"><canvas id="c_strandG12"></canvas></div></div><div class="chart-card full"><h4>Strand Enrollment Trend (HUMSS & ICT/CSS vs GAS)</h4><div class="chart-box lg"><canvas id="c_strandTrend"></canvas></div></div></div><div class="table-wrap"><h4 style="margin-bottom:0.5rem;color:var(--navy)">SHS Strand Data Table</h4><table id="tblStrands"></table></div></section><section id="sec-data" class="section"><h2 class="section-title">Complete Master Data (All Years)</h2><div class="table-wrap"><table id="tblMaster"></table></div><h2 class="section-title">Teachers per Learning Area</h2><div class="table-wrap"><table id="tblTeachers"></tr></div></section><section id="sec-recommend" class="section"><h2 class="section-title">Insights & Management Recommendations</h2><div class="insight-box" id="fullInsights"></div><h2 class="section-title">8 Management Recommendations</h2><div id="recList"></div><h2 class="section-title">Quick Wins · Medium-Term · Long-Term</h2><div class="chart-grid three"><div class="chart-card"><h4>Quick Wins (1–8 weeks)</h4><ul style="font-size:0.82rem;margin-left:1.2rem;color:#334155" id="listQuick"></ul></div><div class="chart-card"><h4>Medium-Term (1 school year)</h4><ul style="font-size:0.82rem;margin-left:1.2rem;color:#334155" id="listMedium"></ul></div><div class="chart-card"><h4>Long-Term (2–5 years)</h4><ul style="font-size:0.82rem;margin-left:1.2rem;color:#334155" id="listLong"></ul></div></div><div class="rec-card" style="border-left-color:var(--orange)"><h5>What should management do first?</h5><p><strong>Launch the Grades 9–10 Retention & Recovery Program</strong> with an Early Warning System — because the dashboard shows the steepest enrollment loss and highest dropout pressure in these grades.</p></div></section></div><footer class="footer">Diosdado Macapagal Memorial Highschool | Data: Registrar BOSY, Attrition, Classroom, Teacher & SHS Strand Records</footer>
+<script>
+const SY=["SY 2021-2022","SY 2022-2023","SY 2023-2024","SY 2024-2025","SY 2025-2026"]; const GR=[7,8,9,10,11,12];
+const master=[{sy:"SY 2021-2022",g:7,b:475,r:5,d:33,c:11},{sy:"SY 2021-2022",g:8,b:465,r:9,d:14,c:12},{sy:"SY 2021-2022",g:9,b:548,r:15,d:28,c:13},{sy:"SY 2021-2022",g:10,b:558,r:5,d:17,c:12},{sy:"SY 2021-2022",g:11,b:445,r:3,d:4,c:9},{sy:"SY 2021-2022",g:12,b:340,r:0,d:0,c:9},{sy:"SY 2022-2023",g:7,b:422,r:4,d:20,c:11},{sy:"SY 2022-2023",g:8,b:424,r:53,d:12,c:10},{sy:"SY 2022-2023",g:9,b:508,r:15,d:26,c:11},{sy:"SY 2022-2023",g:10,b:482,r:2,d:0,c:11},{sy:"SY 2022-2023",g:11,b:465,r:7,d:23,c:12},{sy:"SY 2022-2023",g:12,b:342,r:2,d:0,c:9},{sy:"SY 2023-2024",g:7,b:313,r:5,d:15,c:10},{sy:"SY 2023-2024",g:8,b:335,r:16,d:14,c:10},{sy:"SY 2023-2024",g:9,b:392,r:12,d:16,c:11},{sy:"SY 2023-2024",g:10,b:413,r:11,d:16,c:11},{sy:"SY 2023-2024",g:11,b:340,r:43,d:7,c:9},{sy:"SY 2023-2024",g:12,b:413,r:0,d:10,c:12},{sy:"SY 2024-2025",g:7,b:402,r:12,d:16,c:11},{sy:"SY 2024-2025",g:8,b:318,r:11,d:17,c:9},{sy:"SY 2024-2025",g:9,b:305,r:3,d:22,c:10},{sy:"SY 2024-2025",g:10,b:367,r:2,d:11,c:10},{sy:"SY 2024-2025",g:11,b:368,r:0,d:5,c:11},{sy:"SY 2024-2025",g:12,b:340,r:0,d:0,c:9},{sy:"SY 2025-2026",g:7,b:432,r:14,d:9,c:11},{sy:"SY 2025-2026",g:8,b:380,r:9,d:10,c:10},{sy:"SY 2025-2026",g:9,b:300,r:18,d:31,c:9},{sy:"SY 2025-2026",g:10,b:294,r:8,d:9,c:8},{sy:"SY 2025-2026",g:11,b:323,r:0,d:14,c:14},{sy:"SY 2025-2026",g:12,b:338,r:0,d:2,c:8}];
+const teachers={"SY 2021-2022":{ENGLISH:8,MATH:8,FILIPINO:8,SCIENCE:8,AP:8,VALUES:4,TLE:10,MAPEH:11,ACAD:10,TVL:10},"SY 2022-2023":{ENGLISH:8,MATH:8,FILIPINO:8,SCIENCE:8,AP:8,VALUES:4,TLE:11,MAPEH:11,ACAD:11,TVL:11},"SY 2023-2024":{ENGLISH:7,MATH:8,FILIPINO:8,SCIENCE:8,AP:8,VALUES:4,TLE:10,MAPEH:11,ACAD:12,TVL:12},"SY 2024-2025":{ENGLISH:7,MATH:6,FILIPINO:6,SCIENCE:8,AP:6,VALUES:6,TLE:9,MAPEH:9,ACAD:12,TVL:12},"SY 2025-2026":{ENGLISH:6,MATH:6,FILIPINO:6,SCIENCE:7,AP:7,VALUES:5,TLE:8,MAPEH:8,ACAD:14,TVL:11}};
+const strands={"SY 2021-2022":{11:{STEM:56,ABM:49,GAS:147,HUMSS:0,"ICT/CSS":77,EIM:18,HBC:15},12:{STEM:53,ABM:50,GAS:81,HUMSS:0,"ICT/CSS":67,EIM:35,HBC:15}},"SY 2022-2023":{11:{STEM:35,ABM:78,GAS:127,HUMSS:0,"ICT/CSS":120,EIM:43,HBC:26},12:{STEM:56,ABM:48,GAS:134,HUMSS:0,"ICT/CSS":44,EIM:24,HBC:9}},"SY 2023-2024":{11:{STEM:64,ABM:46,GAS:0,HUMSS:89,"ICT/CSS":108,EIM:54,HBC:19},12:{STEM:38,ABM:80,GAS:122,HUMSS:0,"ICT/CSS":112,EIM:65,HBC:25}},"SY 2024-2025":{11:{STEM:71,ABM:56,GAS:0,HUMSS:103,"ICT/CSS":69,EIM:33,HBC:14},12:{STEM:64,ABM:45,GAS:0,HUMSS:97,"ICT/CSS":65,EIM:48,HBC:11}},"SY 2025-2026":{11:{STEM:69,ABM:42,GAS:0,HUMSS:102,"ICT/CSS":65,EIM:31,HBC:14},12:{STEM:70,ABM:52,GAS:0,HUMSS:103,"ICT/CSS":67,EIM:33,HBC:14}}};
+const TABS=[{id:"summary",label:"Executive Summary"},{id:"enrollment",label:"Enrollment"},{id:"retention",label:"Retention & Attrition"},{id:"resources",label:"Teachers & Resources"},{id:"strands",label:"SHS Strands"},{id:"data",label:"Full Data Tables"},{id:"recommend",label:"Insights & Actions"}];
+let selSY="SY 2025-2026", selGrade="all", selProgram="all"; const charts={};
+const sum=(arr,k)=>arr.reduce((a,x)=>a+(k?x[k]:x),0); const pct=(n,d)=>d?(n/d)*100:0;
+const fmt=n=>Number(n).toLocaleString(); const fmtP=n=>n.toFixed(2)+"%";
+const prior=sy=>{const i=SY.indexOf(sy); return i>0?SY[i-1]:null;};
+const rowsSY=sy=>master.filter(x=>x.sy===sy);
+const filterRows=()=>{let r=rowsSY(selSY); if(selGrade!=="all")r=r.filter(x=>x.g===+selGrade); if(selProgram==="jhs")r=r.filter(x=>x.g<=10); if(selProgram==="shs")r=r.filter(x=>x.g>=11); return r;};
+const metrics=sy=>{const r=rowsSY(sy); const t=sum(r,"b"), dr=sum(r,"d"), rr=sum(r,"r"), rm=sum(r,"c"); const g910=r.filter(x=>x.g===9||x.g===10).reduce((a,x)=>a+x.b,0); const jhs=r.filter(x=>x.g<=10).reduce((a,x)=>a+x.b,0); const prevSy=prior(sy), pt=prevSy?sum(rowsSY(prevSy),"b"):null; const te=teachers[sy]; return {t,dr,rr,rm,g910,jhs,dropR:pct(dr,t),repR:pct(rr,t),retR:100-pct(dr,t),promR:100-pct(dr,t)-pct(rr,t),growth:pt!=null?pct(t-pt,pt):null,classU:pct(t,rm*40),seatU:pct(t,rm*45),ratioEn:Math.round(jhs/te.ENGLISH),ratioMa:Math.round(jhs/te.MATH),ratioFi:Math.round(jhs/te.FILIPINO)}};
+function kpi(label,val,sub,cls=""){const sc=sub&&sub.includes("▼")?"down":sub&&sub.includes("▲")?"up":""; return '<div class="kpi '+cls+'"><div class="label">'+label+'</div><div class="value">'+val+'</div>'+(sub?'<div class="sub '+sc+'">'+sub+'</div>':'')+'</div>';}
+function destroy(id){if(charts[id]){charts[id].destroy(); delete charts[id];}}
+function chartOpts(legend=true){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:legend}}};}
+function renderKPIs(){const m=metrics(selSY),p=prior(selSY),pm=p?metrics(p):null; const gs=m.growth!=null?(m.growth>=0?"▲ "+fmtP(m.growth):"▼ "+fmtP(Math.abs(m.growth)))+" vs prior SY":""; document.getElementById("kpiAll12").innerHTML=[kpi("1. Total Enrollment",fmt(m.t),gs),kpi("2. Enrollment Growth",m.growth!=null?fmtP(m.growth):"—",pm?"Prior: "+fmt(pm.t):"",m.growth<0?"warn":""),kpi("3. G9–10 Enrollment",fmt(m.g910),fmtP(pct(m.g910,m.t))+" of school","warn"),kpi("4. Retention Rate",fmtP(m.retR),"Higher is better"),kpi("5. Dropout Rate",fmtP(m.dropR),fmt(m.dr)+" cases","danger"),kpi("6. Repeater Rate",fmtP(m.repR),fmt(m.rr)+" cases"),kpi("7. Promotion Rate (est.)",fmtP(m.promR),"Derived KPI"),kpi("8. Student-Teacher (Eng.)",m.ratioEn+":1","JHS per teacher","warn"),kpi("9. English Teachers",teachers[selSY].ENGLISH,"Was 8 in 2021–22"),kpi("10. Classroom Util.",fmtP(m.classU),"Target 40/room"),kpi("11. Seat Capacity Util.",fmtP(m.seatU),"Capacity = rooms×45"),kpi("12. Top SHS Strand",topStrand(selSY),"HUMSS / ICT trend")].join(""); document.getElementById("kpiEnroll").innerHTML=[kpi("Total BOSY",fmt(m.t),gs),kpi("JHS",fmt(m.jhs),fmtP(pct(m.jhs,m.t))),kpi("SHS",fmt(m.t-m.jhs),fmtP(pct(m.t-m.jhs,m.t))),kpi("Largest Grade",topGrade(selSY),"")].join(""); document.getElementById("kpiRetain").innerHTML=[kpi("Retention",fmtP(m.retR),""),kpi("Dropout",fmtP(m.dropR),fmt(m.dr)+" total","danger"),kpi("Repeater",fmtP(m.repR),fmt(m.rr)+" total"),kpi("G9 Dropouts",fmt(rowsSY(selSY).find(x=>x.g===9).d),"Alert grade","danger")].join(""); document.getElementById("kpiResource").innerHTML=[kpi("Ratio English",m.ratioEn+":1",""),kpi("Ratio Math",m.ratioMa+":1",""),kpi("Ratio Filipino",m.ratioFi+":1",""),kpi("Classrooms",fmt(m.rm),"")].join(""); const st=strandTotals(selSY); document.getElementById("kpiStrand").innerHTML=[kpi("HUMSS",fmt(st.HUMSS||0),""),kpi("ICT/CSS",fmt(st["ICT/CSS"]||0),""),kpi("STEM",fmt(st.STEM||0),""),kpi("GAS",fmt(st.GAS||0),"Declined to 0","warn")].join(""); const first=metrics("SY 2021-2022"),last=metrics("SY 2025-2026"); document.getElementById("statPills").innerHTML='<span class="stat-pill">5-Year Change: <strong>'+fmtP(pct(last.t-first.t,first.t))+'</strong></span><span class="stat-pill">G9–10 Change: <strong>'+fmtP(pct(last.g910-first.g910,first.g910))+'</strong></span><span class="stat-pill">Peak Enrollment: <strong>2,831</strong> (2021–22)</span><span class="stat-pill">Latest: <strong>'+fmt(last.t)+'</strong> (2025–26)</span>';}
+function topGrade(sy){const r=rowsSY(sy); const max=Math.max(...r.map(x=>x.b)); return "Grade "+r.find(x=>x.b===max).g;}
+function topStrand(sy){const t=strandTotals(sy); let best="",v=0; Object.entries(t).forEach(([k,n])=>{if(n>v){v=n;best=k;}}); return best;}
+function strandTotals(sy){const s=strands[sy],o={}; [11,12].forEach(g=>Object.entries(s[g]).forEach(([k,v])=>o[k]=(o[k]||0)+v)); return o;}
+function renderCharts(){Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif"; Chart.defaults.font.size=11; const rows=filterRows(); const gl=GR.map(String); const m=metrics(selSY); const pSy=prior(selSY); const rowsP=pSy?rowsSY(pSy):[]; destroy("c_enrollTrend"); charts.c_enrollTrend=new Chart(document.getElementById("c_enrollTrend"),{type:"line",data:{labels:SY.map(s=>s.replace("SY ","")),datasets:[{label:"Total BOSY",data:SY.map(s=>sum(rowsSY(s),"b")),borderColor:"#1b3a5c",backgroundColor:"rgba(27,58,92,0.12)",fill:true,tension:0.3,pointRadius:6}]},options:{...chartOpts(false),scales:{y:{beginAtZero:false}}}}); destroy("c_growth"); const gData=SY.slice(1).map((s,i)=>pct(sum(rowsSY(s),"b")-sum(rowsSY(SY[i]),"b"),sum(rowsSY(SY[i]),"b"))); charts.c_growth=new Chart(document.getElementById("c_growth"),{type:"bar",data:{labels:SY.slice(1).map(s=>s.replace("SY ","")),datasets:[{label:"Growth %",data:gData,backgroundColor:gData.map(v=>v>=0?"#27ae60":"#c0392b")}]},options:chartOpts(false)}); destroy("c_ratesTrend"); charts.c_ratesTrend=new Chart(document.getElementById("c_ratesTrend"),{type:"line",data:{labels:SY.map(s=>s.replace("SY ","")),datasets:[{label:"Retention %",data:SY.map(s=>metrics(s).retR),borderColor:"#27ae60",tension:0.3},{label:"Dropout %",data:SY.map(s=>metrics(s).dropR),borderColor:"#c0392b",tension:0.3},{label:"Repeater %",data:SY.map(s=>metrics(s).repR),borderColor:"#8e44ad",tension:0.3},{label:"Promotion % (est.)",data:SY.map(s=>metrics(s).promR),borderColor:"#3498db",borderDash:[5,5],tension:0.3}]},options:chartOpts()}); destroy("c_gradeDist"); const rAll=rowsSY(selSY); charts.c_gradeDist=new Chart(document.getElementById("c_gradeDist"),{type:"bar",data:{labels:gl,datasets:[{label:"BOSY",data:rAll.map(x=>x.b),backgroundColor:rAll.map(x=>(x.g===9||x.g===10)?"#e67e22":"#1b3a5c")}]},options:chartOpts(false)}); destroy("c_gradeCompare"); charts.c_gradeCompare=new Chart(document.getElementById("c_gradeCompare"),{type:"bar",data:{labels:gl,datasets:[{label:selSY.replace("SY ",""),data:rAll.map(x=>x.b),backgroundColor:"#1b3a5c"},{label:pSy?pSy.replace("SY ",""):"Prior",data:rowsP.map(x=>x.b),backgroundColor:"#94a3b8"}]},options:chartOpts()}); destroy("c_g910"); charts.c_g910=new Chart(document.getElementById("c_g910"),{type:"line",data:{labels:SY.map(s=>s.replace("SY ","")),datasets:[{label:"Grades 9–10",data:SY.map(s=>rowsSY(s).filter(x=>x.g===9||x.g===10).reduce((a,x)=>a+x.b,0)),borderColor:"#e67e22",tension:0.3,fill:true,backgroundColor:"rgba(230,126,34,0.15)"},{label:"Total School",data:SY.map(s=>sum(rowsSY(s),"b")),borderColor:"#1b3a5c",tension:0.3}]},options:chartOpts()}); destroy("c_jhsShs"); charts.c_jhsShs=new Chart(document.getElementById("c_jhsShs"),{type:"doughnut",data:{labels:["JHS (7–10)","SHS (11–12)"],datasets:[{data:[m.jhs,m.t-m.jhs],backgroundColor:["#1b3a5c","#3498db"]}]},options:chartOpts(false)}); destroy("c_gradeShare"); charts.c_gradeShare=new Chart(document.getElementById("c_gradeShare"),{type:"pie",data:{labels:gl,datasets:[{data:rAll.map(x=>x.b),backgroundColor:["#5dade2","#5499c7","#e67e22","#d35400","#8e44ad","#2c3e50"]}]},options:chartOpts(false)}); destroy("c_dropout"); charts.c_dropout=new Chart(document.getElementById("c_dropout"),{type:"bar",data:{labels:gl,datasets:[{label:"Dropouts",data:rowsSY(selSY).map(x=>x.d),backgroundColor:"#c0392b"}]},options:chartOpts(false)}); destroy("c_repeater"); charts.c_repeater=new Chart(document.getElementById("c_repeater"),{type:"bar",data:{labels:gl,datasets:[{label:"Repeaters",data:rowsSY(selSY).map(x=>x.r),backgroundColor:"#8e44ad"}]},options:chartOpts(false)}); destroy("c_stackAttrition"); const ra=rowsSY(selSY); charts.c_stackAttrition=new Chart(document.getElementById("c_stackAttrition"),{type:"bar",data:{labels:gl,datasets:[{label:"Dropouts",data:ra.map(x=>x.d),backgroundColor:"#c0392b"},{label:"Repeaters",data:ra.map(x=>x.r),backgroundColor:"#8e44ad"}]},options:{...chartOpts(),scales:{x:{stacked:true},y:{stacked:true}}}}); destroy("c_teachers"); const ar=["ENGLISH","MATH","FILIPINO","SCIENCE","AP","TLE","MAPEH","VALUES"]; const t=teachers[selSY]; charts.c_teachers=new Chart(document.getElementById("c_teachers"),{type:"bar",data:{labels:ar,datasets:[{label:"Teachers",data:ar.map(a=>t[a]),backgroundColor:ar.map(a=>["ENGLISH","MATH","FILIPINO"].includes(a)?"#e67e22":"#5dade2")}]},options:{...chartOpts(false),indexAxis:"y"}}); destroy("c_teacherTrend"); charts.c_teacherTrend=new Chart(document.getElementById("c_teacherTrend"),{type:"line",data:{labels:SY.map(s=>s.replace("SY ","")),datasets:["ENGLISH","MATH","FILIPINO"].map((sub,i)=>({label:sub,data:SY.map(s=>teachers[s][sub]),borderColor:["#1b3a5c","#e67e22","#8e44ad"][i],tension:0.3}))},options:chartOpts()}); destroy("c_ratio"); charts.c_ratio=new Chart(document.getElementById("c_ratio"),{type:"line",data:{labels:SY.map(s=>s.replace("SY ","")),datasets:["ENGLISH","MATH","FILIPINO"].map((sub,i)=>({label:sub,data:SY.map(s=>Math.round(metrics(s).jhs/teachers[s][sub])),borderColor:["#1b3a5c","#e67e22","#8e44ad"][i],tension:0.3}))},options:chartOpts()}); destroy("c_classUtil"); const ra2=rowsSY(selSY); charts.c_classUtil=new Chart(document.getElementById("c_classUtil"),{type:"bar",data:{labels:gl,datasets:[{label:"Utilization %",data:ra2.map(x=>pct(x.b,x.c*40)),backgroundColor:ra2.map(x=>pct(x.b,x.c*40)>100?"#c0392b":"#27ae60")}]},options:{...chartOpts(false),scales:{y:{max:120}}}}); destroy("c_enrollVsRoom"); charts.c_enrollVsRoom=new Chart(document.getElementById("c_enrollVsRoom"),{type:"bar",data:{labels:gl,datasets:[{label:"BOSY",data:ra2.map(x=>x.b),backgroundColor:"#1b3a5c"},{label:"Capacity (40×rooms)",data:ra2.map(x=>x.c*40),backgroundColor:"#bdc3c7"}]},options:chartOpts()}); destroy("c_seatUtil"); charts.c_seatUtil=new Chart(document.getElementById("c_seatUtil"),{type:"bar",data:{labels:SY.map(s=>s.replace("SY ","")),datasets:[{label:"Seat Util %",data:SY.map(s=>metrics(s).seatU),backgroundColor:"#3498db"}]},options:chartOpts(false)}); destroy("c_avgClass"); charts.c_avgClass=new Chart(document.getElementById("c_avgClass"),{type:"bar",data:{labels:gl,datasets:[{label:"Students/Section",data:ra2.map(x=>+(x.b/x.c).toFixed(1)),backgroundColor:"#2c5282"}]},options:chartOpts(false)}); const st=strandTotals(selSY); const stLabels=Object.keys(st).filter(k=>st[k]>0); const stVals=stLabels.map(k=>st[k]); const cols=["#1b3a5c","#2e86c1","#8e44ad","#16a085","#e67e22","#c0392b","#7f8c8d"]; destroy("c_strandPie"); charts.c_strandPie=new Chart(document.getElementById("c_strandPie"),{type:"doughnut",data:{labels:stLabels,datasets:[{data:stVals,backgroundColor:cols}]},options:chartOpts(false)}); destroy("c_strandPct"); charts.c_strandPct=new Chart(document.getElementById("c_strandPct"),{type:"bar",data:{labels:stLabels,datasets:[{label:"%",data:stVals.map(v=>pct(v,stVals.reduce((a,b)=>a+b,0))),backgroundColor:cols}]},options:chartOpts(false)}); function strandBar(canvasId,grade){destroy(canvasId); const sd=strands[selSY][grade]; const labels=Object.keys(sd).filter(k=>sd[k]>0); charts[canvasId]=new Chart(document.getElementById(canvasId),{type:"bar",data:{labels,datasets:[{data:labels.map(k=>sd[k]),backgroundColor:"#1b3a5c"}]},options:chartOpts(false)});} strandBar("c_strandG11",11); strandBar("c_strandG12",12); destroy("c_strandTrend"); charts.c_strandTrend=new Chart(document.getElementById("c_strandTrend"),{type:"line",data:{labels:SY.map(s=>s.replace("SY ","")),datasets:[{label:"HUMSS",data:SY.map(s=>(strands[s][11].HUMSS||0)+(strands[s][12].HUMSS||0)),borderColor:"#8e44ad",tension:0.3},{label:"ICT/CSS",data:SY.map(s=>(strands[s][11]["ICT/CSS"]||0)+(strands[s][12]["ICT/CSS"]||0)),borderColor:"#16a085",tension:0.3},{label:"GAS",data:SY.map(s=>(strands[s][11].GAS||0)+(strands[s][12].GAS||0)),borderColor:"#e67e22",tension:0.3}]},options:chartOpts()});}
+function heatClass(v,type){if(type==="d"&&v>=25)return"heat-high"; if(type==="d"&&v>=15)return"heat-med"; if(type==="r"&&v>=40)return"heat-high"; if(type==="r"&&v>=15)return"heat-med"; if(v===0)return"heat-low"; return "";}
+function renderTables(){const rows=rowsSY(selSY); let h="</table><th>Grade</th><th>BOSY</th><th>Classrooms</th><th>Avg Class Size</th><th>% of Total</th><th>YoY BOSY Δ</th></tr>"; const pSy=prior(selSY), rp=pSy?rowsSY(pSy):[]; const tot=sum(rows,"b"); rows.forEach(x=>{const prev=rp.find(p=>p.g===x.g); const delta=prev?x.b-prev.b:"—"; h+="<tr><td>"+x.g+"</td><td>"+fmt(x.b)+"</td><td>"+x.c+"</td><td>"+(x.b/x.c).toFixed(1)+"</td><td>"+fmtP(pct(x.b,tot))+"</td><td>"+(typeof delta==="number"?(delta>=0?"▲":"▼")+" "+Math.abs(delta):"—")+"</td></tr>";}); document.getElementById("tblEnroll").innerHTML=h; h="<tr><th>Grade</th><th>BOSY</th><th>Dropouts</th><th>Dropout %</th><th>Repeaters</th><th>Repeater %</th><th>Promotion % (est.)</th></tr>"; rows.forEach(x=>{const dr=pct(x.d,x.b), rr=pct(x.r,x.b); h+="<tr><td class='"+heatClass(x.d,"d")+"'>"+x.d+"</td><td>"+fmtP(dr)+"</td><td class='"+heatClass(x.r,"r")+"'>"+x.r+"</td><td>"+fmtP(rr)+"</td><td>"+fmtP(100-dr-rr)+"</td></tr>";}); document.getElementById("tblAttrition").innerHTML=h; h="<table><th>Grade</th><th>BOSY</th><th>Classrooms</th><th>Avg Class</th><th>Class Util %</th><th>Seat Util %</th></tr>"; rows.forEach(x=>{h+="<tr><td>"+x.g+"</td><td>"+fmt(x.b)+"</td><td>"+x.c+"</td><td>"+(x.b/x.c).toFixed(1)+"</td><td>"+fmtP(pct(x.b,x.c*40))+"</td><td>"+fmtP(pct(x.b,x.c*45))+"</td></tr>";}); document.getElementById("tblResource").innerHTML=h; h="<table><th>School Year</th>"+GR.map(g=>"<th>G"+g+"</th>").join("")+"</tr>"; SY.forEach(sy=>{h+="<tr><td>"+sy.replace("SY ","")+"</td>"; GR.forEach(g=>{const d=master.find(x=>x.sy===sy&&x.g===g).d; h+="<td class='"+heatClass(d,"d")+"'>"+d+"</td>";}); h+="</tr>";}); document.getElementById("tblHeatmap").innerHTML=h; h="<tr><th>SY</th><th>Grade</th><th>Strand</th><th>BOSY</th></td>"; [11,12].forEach(g=>Object.entries(strands[selSY][g]).forEach(([k,v])=>{if(v>0)h+="<tr><td>"+selSY+"</td><td>"+g+"</td><td>"+k+"</td><td>"+v+"</td></tr>";})); document.getElementById("tblStrands").innerHTML=h; h="<table><th>School Year</th><th>Grade</th><th>BOSY</th><th>Repeaters</th><th>Drop Out</th><th>Classroom</th><th>Seats</th></tr>"; master.forEach(x=>h+="<tr><td>"+x.sy+"</td><td>"+x.g+"</td><td>"+x.b+"</td><td>"+x.r+"</td><td>"+x.d+"</td><td>"+x.c+"</td><td>"+x.b+"</td></tr>"); document.getElementById("tblMaster").innerHTML=h; h="<table><th>School Year</th><th>English</th><th>Math</th><th>Filipino</th><th>Science</th><th>TLE</th><th>MAPEH</th><th>ACAD</th><th>TVL</th></tr>"; SY.forEach(sy=>{const t=teachers[sy]; h+="<tr><td>"+sy+"</td><td>"+t.ENGLISH+"</td><td>"+t.MATH+"</td><td>"+t.FILIPINO+"</td><td>"+t.SCIENCE+"</td><td>"+t.TLE+"</td><td>"+t.MAPEH+"</td><td>"+t.ACAD+"</td><td>"+t.TVL+"</td></tr>";}); document.getElementById("tblTeachers").innerHTML=h;}
+const RECOMMENDATIONS=[{title:"Grades 9–10 Retention & Recovery Program",action:"Monthly task force; parent conferences; remedial blocks for at-risk learners.",evidence:"G9–10 enrollment fell ~46%; Grade 9 dropouts = 31 in 2025–26.",benefit:"Slows enrollment collapse in critical JHS years.",priority:"high"},{title:"Early Warning System (EWS)",action:"Flag students at Week 4 & 12 for attendance <85% or failing grades.",evidence:"Declining retention; recurring dropouts across grades.",benefit:"Preventive vs reactive intervention.",priority:"high"},{title:"Grade 8 & 11 Remedial Program",action:"Saturday/after-school support in Math, English, Filipino.",evidence:"Repeater spikes: G8=53 (2022–23), G11=43 (2023–24).",benefit:"Lower repeater rate; better promotion.",priority:"high"},{title:"SDO Request for Core Teachers",action:"Submit dashboard evidence for English/Math/Filipino hiring.",evidence:"Teachers 8→6; student-teacher ratio rising above 230:1.",benefit:"Sustainable workload; better instruction.",priority:"high"},{title:"Rebalance Sections & Classrooms",action:"Merge underfilled sections; avoid overcrowding where BOSY/room >40.",evidence:"Uneven classroom utilization; capacity exceeds population in some grades.",benefit:"Efficient resource use.",priority:"medium"},{title:"Feeder School Enrollment Campaign",action:"Grade 7 orientation with elementary schools and barangays.",evidence:"Negative enrollment growth most years; total down 27% in 5 years.",benefit:"Stabilize incoming pipeline.",priority:"medium"},{title:"Align SHS with HUMSS & ICT/CSS",action:"Invest in teachers, labs, and slots for high-demand strands.",evidence:"Pie chart: HUMSS & ICT/CSS dominate; GAS → 0.",benefit:"Programs match student demand.",priority:"medium"},{title:"Quarterly Dashboard Review",action:"Principal + heads review KPIs; document actions in minutes.",evidence:"Multiple KPIs require coordinated response.",benefit:"Data-driven decision culture.",priority:"medium"}];
+function renderInsights(){const f=metrics("SY 2021-2022"),l=metrics("SY 2025-2026"); const html='<h4>Executive Insights (Descriptive → Prescriptive)</h4><ul><li><strong>Descriptive:</strong> Enrollment dropped from '+fmt(f.t)+' to '+fmt(l.t)+' ('+fmtP(pct(l.t-f.t,f.t))+') over five school years.</li><li><strong>Diagnostic:</strong> Grades 9–10 fell from '+fmt(f.g910)+' to '+fmt(l.g910)+'; core teachers (English/Math/Filipino) declined; G9 dropout peak in latest year.</li><li><strong>Predictive:</strong> Without intervention, G9–10 may fall below 550 and retention will remain pressured.</li><li><strong>Prescriptive:</strong> Prioritize G9–10 retention, EWS, G8/11 remedials, teacher deployment, SHS strand alignment.</li></ul>'; document.getElementById("execInsight").innerHTML=html; document.getElementById("fullInsights").innerHTML=html; document.getElementById("recList").innerHTML=RECOMMENDATIONS.map((r,i)=>'<div class="rec-card"><h5>'+(i+1)+'. '+r.title+' <span class="tag tag-'+r.priority+'">'+r.priority.toUpperCase()+'</span></h5><p><strong>Action:</strong> '+r.action+'</p><p><strong>Evidence:</strong> '+r.evidence+'</p><p><strong>Expected benefit:</strong> '+r.benefit+'</p></div>').join(""); document.getElementById("listQuick").innerHTML='<li>Grade 9 dropout alert list — immediate parent calls</li><li>One-page KPI bulletin for staff</li><li>Freeze new sections where utilization is low</li>'; document.getElementById("listMedium").innerHTML='<li>Grade 8–10 academic support package</li><li>Core-subject staffing plan + SDO request</li><li>SHS strand intake planning for HUMSS/ICT</li>'; document.getElementById("listLong").innerHTML='<li>Multi-year retention strategy with feeder schools</li><li>Predictive analytics for enrollment & dropout risk</li>';}
+function buildNav(){document.getElementById("navTabs").innerHTML=TABS.map((t,i)=>'<button class="nav-tab'+(i===0?" active":"")+'" data-sec="sec-'+t.id+'">'+t.label+'</button>').join(""); document.querySelectorAll(".nav-tab").forEach(btn=>{btn.addEventListener("click",()=>{document.querySelectorAll(".nav-tab").forEach(b=>b.classList.remove("active")); document.querySelectorAll(".section").forEach(s=>s.classList.remove("active")); btn.classList.add("active"); document.getElementById(btn.dataset.sec).classList.add("active");});});}
+function resetFilters(){selSY="SY 2025-2026"; selGrade="all"; selProgram="all"; document.getElementById("fSY").value=selSY; document.getElementById("fGrade").value="all"; document.getElementById("fProgram").value="all"; refresh();}
+function refresh(){renderKPIs(); renderCharts(); renderTables(); renderInsights();}
+document.getElementById("genDate").textContent="Generated: "+new Date().toLocaleString(); const fSY=document.getElementById("fSY"); SY.forEach(s=>{const o=document.createElement("option"); o.value=s; o.textContent=s; if(s===selSY)o.selected=true; fSY.appendChild(o);}); fSY.onchange=e=>{selSY=e.target.value; refresh();}; document.getElementById("fGrade").onchange=e=>{selGrade=e.target.value; refresh();}; document.getElementById("fProgram").onchange=e=>{selProgram=e.target.value; refresh();}; buildNav(); refresh();
+<\/script>
+</body>
+</html>`;
+    }
+  </script>
+</body>
+</html>
