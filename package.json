@@ -1,0 +1,31 @@
+{
+  "name": "dmmhs-platform",
+  "version": "2.2.0",
+  "description": "DMMHS School Performance Dashboard — API, auth, CRUD, hardened TLS/JWT",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js",
+    "start:https": "node server/index.js",
+    "start:json": "node server/simple-server.js",
+    "dev": "node --watch server/index.js",
+    "dev:https": "node --watch server/index.js",
+    "generate-secrets": "node scripts/generate-secrets.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "selfsigned": "^2.4.1"
+  },
+  "optionalDependencies": {
+    "rate-limit-redis": "^4.2.0",
+    "redis": "^4.7.0"
+  }
+}

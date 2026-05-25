@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Development TLS certificates (auto-generated)
+server/certs/*.pem
+server/certs/*.key
+server/certs/*.crt
+!server/certs/.gitkeep
+
+# Database (local instance)
+server/dmmhs.db
+server/dmmhs.db-journal
+server/dmmhs.db-wal
+server/dmmhs.db-shm
+
+# Logs and OS
+*.log
+server/logs/*.log
+!server/logs/.gitkeep
+.DS_Store
+Thumbs.db

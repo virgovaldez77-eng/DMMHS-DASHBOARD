@@ -1,0 +1,81 @@
+<script>
+// ========== ENHANCED CHART ANIMATIONS ==========
+// This improves all chart animations on the dashboard
+
+(function enhanceCharts() {
+    // Store original Chart.js update method
+    const originalUpdate = Chart.prototype.update;
+    
+    // Override update method to add animation
+    Chart.prototype.update = function(config) {
+        config = config || {};
+        config.duration = config.duration || 1000;
+        config.easing = config.easing || 'easeOutQuart';
+        return originalUpdate.call(this, config);
+    };
+    
+    // Add custom animation to all charts when they're created
+    const originalChart = window.Chart;
+    if (originalChart) {
+        window.Chart = function(context, config) {
+            // Add animation config if not present
+            if (!config.options) config.options = {};
+            if (!config.options.animation) {
+                config.options.animation = {
+                    duration: 1000,
+                    easing: 'easeOutQuart',
+                    animateScale: true,
+                    animateRotate: true
+                };
+            }
+            return new originalChart(context, config);
+        };
+        window.Chart.prototype = originalChart.prototype;
+    }
+    
+    // Function to animate KPI values
+    window.animateValue = function(element, start, end, duration = 600) {
+        if (!element) return;
+        const startTime = performance.now();
+        const updateValue = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const current = Math.floor(start + (end - start) * easeOutQuart);
+            element.textContent = current.toLocaleString();
+            if (progress < 1) {
+                requestAnimationFrame(updateValue);
+            }
+        };
+        requestAnimationFrame(updateValue);
+    };
+    
+    // Add hover animation to charts
+    function addChartHoverEffect(chart) {
+        const canvas = chart.canvas;
+        canvas.addEventListener('mouseenter', () => {
+            chart.options.animation.duration = 300;
+            chart.update();
+        });
+        canvas.addEventListener('mouseleave', () => {
+            chart.options.animation.duration = 1000;
+            chart.update();
+        });
+    }
+    
+    // Monitor for new charts
+    const observer = new MutationObserver(() => {
+        const charts = document.querySelectorAll('canvas');
+        charts.forEach(canvas => {
+            if (canvas.chart && !canvas._hasHoverEffect) {
+                addChartHoverEffect(canvas.chart);
+                canvas._hasHoverEffect = true;
+            }
+        });
+    });
+    
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    console.log('Chart animations enhanced!');
+})();
+</script>

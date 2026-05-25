@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Diosdado Macapagal Memorial Highschool | School Performance Analytics</title>
+    <link rel="icon" href="assets/school-logo.jpg" type="image/jpeg" />
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/dmmhs-enterprise-dark.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="js/analytics-continuum.js"></script>
+</head>
+<body class="dark-theme">
+
+<div id="loginPageWrap">
+    <div class="login-page-bg" role="img" aria-label="Diosdado Macapagal Memorial Highschool One Team One Dream school banner"></div>
+    <div class="login-page-overlay" aria-hidden="true"></div>
+    <div id="loginCard" class="glass login-container">
+    <div class="logo-area">
+        <img src="assets/school-logo.jpg" alt="DMMHS Logo" class="brand-logo" onerror="this.onerror=null;this.src='assets/dmmhs-logo.svg';" />
+        <p class="login-motto">ONE TEAM · ONE DREAM</p>
+        <h2>Diosdado Macapagal Memorial Highschool</h2>
+        <p class="login-sub">School Performance Monitoring Dashboard</p>
+        <p class="login-sub">Floridablanca, Pampanga · Est. 2001</p>
+    </div>
+    <form id="loginForm">
+        <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="emailInput" placeholder="Email address" autocomplete="email"></div>
+        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="passwordInput" placeholder="Password"><i class="fas fa-eye-slash toggle-pwd" id="togglePwdIcon"></i></div>
+        <div class="options"><label class="remember"><input type="checkbox" id="rememberCheck"> <span>Remember me</span></label><a href="#" id="forgotLink" style="color:var(--text-secondary);">Forgot?</a></div>
+        <button type="submit" class="login-btn"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
+        <div id="loginError" class="error-msg"></div>
+    </form>
+    <footer style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+        <span style="font-size:0.68rem;">admin@dmmhs.edu.ph / admin123 · editor@dmmhs.edu.ph / editor123 · viewer@dmmhs.edu.ph / viewer123</span>
+        <button id="loginThemeToggle" class="theme-toggle-btn" style="padding: 0.3rem 0.9rem;"><i class="fas fa-moon"></i> Theme</button>
+    </footer>
+    </div>
+</div>
+
+<div id="appWrapper" class="app-wrapper" style="display:none;">
+    <button class="mobile-menu-btn" id="mobileMenuToggle"><i class="fas fa-bars"></i> Menu</button>
+    <div class="sidebar" id="sidebar">
+        <button type="button" class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar"><i class="fas fa-chevron-left"></i></button>
+        <div class="sidebar-brand">
+            <img src="assets/school-logo.jpg" alt="Official School Logo" class="sidebar-logo" onerror="this.src='assets/dmmhs-logo.svg'" />
+            <div class="sidebar-brand-text">
+                <span class="brand-title">Diosdado Macapagal Memorial Highschool</span>
+                <span class="brand-sub">Analytics Portal</span>
+            </div>
+        </div>
+        <div class="nav-item active" data-view="dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></div>
+        <div class="nav-item" data-view="enrollment"><i class="fas fa-user-graduate"></i><span>Enrollment</span></div>
+        <div class="nav-item" data-view="dropouts"><i class="fas fa-user-slash"></i><span>Dropouts</span></div>
+        <div class="nav-item" data-view="repeaters"><i class="fas fa-redo-alt"></i><span>Repeaters</span></div>
+        <div class="nav-item" data-view="teachers"><i class="fas fa-chalkboard-user"></i><span>Teachers</span></div>
+        <div class="nav-item" data-view="shsstrands"><i class="fas fa-layer-group"></i><span>SHS Strands</span></div>
+        <div class="nav-item" data-view="reports"><i class="fas fa-chart-line"></i><span>Reports</span></div>
+        <div class="nav-item" data-view="analytics"><i class="fas fa-project-diagram"></i><span>Analytics Continuum</span></div>
+        <div class="nav-item" data-view="logs"><i class="fas fa-history"></i><span>Activity Logs</span></div>
+        <div class="nav-item" data-view="dataAdmin"><i class="fas fa-database"></i><span>Data Admin</span></div>
+        <div class="nav-item" data-view="users"><i class="fas fa-users-cog"></i><span>User Management</span></div>
+        <div class="nav-item" data-view="settings"><i class="fas fa-cog"></i><span>Settings</span></div>
+        <p class="sidebar-footer-text">ONE TEAM · ONE DREAM · Est. 2001</p>
+        <div style="margin-top: 1rem;"><button id="logoutSidebarBtn" class="logout-side" style="width:100%;"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+    </div>
+    <div class="dashboard-shell">
+        <header class="premium-header">
+            <div class="header-left">
+                <span class="header-datetime"><i class="fas fa-calendar-day"></i> <span id="headerDate">—</span></span>
+                <span class="header-datetime"><i class="fas fa-clock"></i> <span id="headerClock">—</span></span>
+            </div>
+            <div class="header-center">
+                <img src="assets/school-logo.jpg" alt="Diosdado Macapagal Memorial Highschool Official Logo" class="header-logo" onerror="this.src='assets/dmmhs-logo.svg'" />
+                <div class="header-titles">
+                    <h1 class="header-school-name">Diosdado Macapagal Memorial Highschool</h1>
+                    <p class="header-tagline">School Performance Monitoring Dashboard</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <button type="button" id="btnNotif" class="btn-icon notif-btn" title="Notifications" aria-label="Notifications"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+                <div class="header-profile" id="headerProfile">
+                    <div class="profile-avatar"><i class="fas fa-user-shield"></i></div>
+                    <div class="profile-meta">
+                        <span class="profile-name" id="profileName">Guest</span>
+                        <span class="profile-role" id="profileRole">VIEWER</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+    <div class="main-content" id="mainContent">
+        <div class="page-toolbar">
+            <h2 class="page-title" id="currentPageTitle">Dashboard</h2>
+            <div class="action-group">
+                <span id="syncBadge" class="sync-badge"><i class="fas fa-database"></i> Local mode</span>
+                <span id="userPill" class="user-pill">Guest</span>
+                <button id="btnPrint" class="btn-icon" title="Print view"><i class="fas fa-print"></i></button>
+                <button id="btnExportJson" class="btn-icon" title="Export JSON"><i class="fas fa-file-export"></i></button>
+                <button id="btnExportExcel" class="btn-icon" title="Export Excel"><i class="fas fa-file-excel"></i></button>
+                <button id="dashboardThemeToggle" class="theme-toggle-btn"><i class="fas fa-palette"></i> <span id="themeToggleLabel">Dark</span></button>
+                <button id="logoutTopBtn" class="logout-side"><i class="fas fa-sign-out-alt"></i> Exit</button>
+            </div>
+        </div>
+        <div id="dynamicView">Loading...</div>
+    </div>
+    </div>
+</div>
+
+<script>
+    // ---------- API & AUTH (backend with localStorage fallback) ----------
+    const API_BASE = (window.location.protocol === 'file:') ? '' : window.location.origin;
+    const IS_OFFLINE_FILE = window.location.protocol === 'file:';
+    let authToken = localStorage.getItem('dmmhs_auth_token') || null;
+    let currentUser = JSON.parse(localStorage.getItem('dmmhs_current_user') || 'null') || { email: '', role: 'viewer', name: '' };
+    let activityLogs = [];
+    let apiOnline = false;
+
+    function canEdit() { return currentUser.role === 'admin' || currentUser.role === 'editor'; }
+    function isAdmin() { return currentUser.role === 'admin'; }
+
+    function showToast(msg, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notify';
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> ${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.classList.add('fade-out'); setTimeout(() => toast.remove(), 500); }, 3000);
+    }
+
+    function showConfirm(msg, onConfirm) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `<div class="modal-card"><h3>Confirm</h3><p>${msg}</p><div style="display:flex;gap:1rem;margin-top:1rem;"><button id="confirmYes" class="btn-primary">Yes</button><button id="confirmNo" class="btn-secondary">Cancel</button></div></div>`;
+        document.body.appendChild(modal);
+        modal.querySelector('#confirmYes').onclick = () => { onConfirm(); modal.remove(); };
+        modal.querySelector('#confirmNo').onclick = () => modal.remove();
+    }
+
+    function updateUserPill() {
+        const pill = document.getElementById('userPill');
+        const name = currentUser.name || currentUser.email || 'Guest';
+        const role = (currentUser.role || 'viewer').toUpperCase();
+        if (pill) pill.textContent = currentUser.email ? `${name} (${currentUser.role})` : 'Guest';
+        const pn = document.getElementById('profileName');
+        const pr = document.getElementById('profileRole');
+        if (pn) pn.textContent = name;
+        if (pr) pr.textContent = role;
+    }
+
+    function updateSyncBadge(online, msg) {
+        const el = document.getElementById('syncBadge');
+        if (!el) return;
+        el.className = 'sync-badge' + (online ? ' online' : '');
+        el.innerHTML = online ? `<i class="fas fa-cloud"></i> ${msg}` : `<i class="fas fa-database"></i> ${msg}`;
+    }
+
+    function addLog(action, details) {
+        const log = { id: Date.now(), user: currentUser.email || 'system', role: currentUser.role || 'viewer', action, details, timestamp: new Date().toISOString() };
+        activityLogs.unshift(log);
+        if (activityLogs.length > 200) activityLogs.pop();
+        if (authToken && apiOnline) {
+            fetch(`${API_BASE}/api/logs`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` }, body: JSON.stringify({ action, details }) }).catch(() => {});
+        }
+    }
+
+    async function apiFetch(path, options = {}) {
+        const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+        if (authToken) headers.Authorization = `Bearer ${authToken}`;
+        const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || res.statusText);
+        }
+        return res.json();
+    }
+
+    async function syncToServer() {
+        if (!authToken || !canEdit()) return;
+        try {
+            await apiFetch('/api/data', { method: 'PUT', body: JSON.stringify(getStoragePayload()) });
+            updateSyncBadge(true, `Synced ${new Date().toLocaleTimeString()}`);
+            apiOnline = true;
+        } catch (e) {
+            updateSyncBadge(false, 'Offline — saved locally');
+        }
+    }
+
+    async function loadFromServer() {
+        if (!authToken) return false;
+        try {
+            const data = await apiFetch('/api/data');
+            applyStoragePayload(data);
+            apiOnline = true;
+            updateSyncBadge(true, `Loaded ${new Date().toLocaleTimeString()}`);
+            return true;
+        } catch {
+            apiOnline = false;
+            updateSyncBadge(false, 'Local mode');
+            return false;
+        }
+    }
+
+    function getStoragePayload() {
+        return { schoolYears, enrolleesData, repeatersData, dropoutsData, teacherJHS, shsAcademic, shsTVL, strandEnrollment, activityLogs };
+    }
+
+    function applyStoragePayload(data) {
+        if (!data) return;
+        schoolYears = data.schoolYears || schoolYears;
+        enrolleesData = data.enrolleesData || enrolleesData;
+        repeatersData = data.repeatersData || repeatersData;
+        dropoutsData = data.dropoutsData || dropoutsData;
+        teacherJHS = data.teacherJHS || teacherJHS;
+        shsAcademic = data.shsAcademic || shsAcademic;
+        shsTVL = data.shsTVL || shsTVL;
+        strandEnrollment = data.strandEnrollment || strandEnrollment;
+        activityLogs = data.activityLogs || activityLogs;
+        for (let yr of schoolYears) if (!strandEnrollment[yr]) strandEnrollment[yr] = {};
+    }
+
+    // ---------- GLOBAL DATA STRUCTURES (with SHS strand enrollments) ----------
+    let schoolYears = ["2021-2022","2022-2023","2023-2024","2024-2025","2025-2026"];
+    const grades = ["Grade 7","Grade 8","Grade 9","Grade 10","Grade 11","Grade 12"];
+    const jhsSubjects = ["ENGLISH","MATH","SCIENCE","FILIPINO","AP","VALUES","TLE","MAPEH"];
+    // Strands list
+    const strandNames = ["STEM", "ABM", "HUMSS", "GAS", "ICT/CSS", "EIM", "HBC"];
+    
+    let enrolleesData = {};
+    let repeatersData = {};
+    let dropoutsData = {};
+    let teacherJHS = {};
+    let shsAcademic = [];
+    let shsTVL = [];
+    // New: strand enrollments per school year: { "2025-2026": { "STEM": {g11:69, g12:70}, ... } }
+    let strandEnrollment = {};
+    
+    // Helper: initialize default data including strands
+    function initDefaultData() {
+        const defaultEnrol = { "2021-2022":[475,465,548,558,445,340], "2022-2023":[422,424,508,482,465,342], "2023-2024":[313,335,392,413,340,413], "2024-2025":[402,318,305,367,368,340], "2025-2026":[432,380,300,294,323,338] };
+        const defaultRepeaters = { "2021-2022":[5,9,15,5,3,0], "2022-2023":[4,53,15,2,7,2], "2023-2024":[5,16,12,11,43,0], "2024-2025":[12,11,3,2,0,0], "2025-2026":[14,9,18,8,0,0] };
+        const defaultDropouts = { "2021-2022":[33,14,28,17,4,0], "2022-2023":[20,12,26,0,23,0], "2023-2024":[15,14,16,16,7,10], "2024-2025":[16,17,22,11,5,0], "2025-2026":[9,10,31,9,14,2] };
+        const defaultTeacherJHS = { "2021-2022":[8,8,8,8,8,4,10,11], "2022-2023":[8,8,8,8,8,4,11,11], "2023-2024":[7,8,8,8,8,4,10,11], "2024-2025":[7,6,8,6,6,6,9,9], "2025-2026":[6,6,7,6,7,5,8,8] };
+        const defaultShsAcademic = [10,11,12,12,14];
+        const defaultShsTVL = [10,11,12,12,11];
+        
+        for(let yr of schoolYears) {
+            enrolleesData[yr] = defaultEnrol[yr] || Array(6).fill(0);
+            repeatersData[yr] = defaultRepeaters[yr] || Array(6).fill(0);
+            dropoutsData[yr] = defaultDropouts[yr] || Array(6).fill(0);
+            teacherJHS[yr] = defaultTeacherJHS[yr] || Array(8).fill(0);
+        }
+        shsAcademic = [...defaultShsAcademic];
+        shsTVL = [...defaultShsTVL];
+        
+        // Default strand data for 2025-2026
+        const defaultStrands = {
+            "STEM": { g11: 69, g12: 70 },
+            "ABM": { g11: 42, g12: 52 },
+            "HUMSS": { g11: 102, g12: 103 },
+            "GAS": { g11: 0, g12: 0 },
+            "ICT/CSS": { g11: 65, g12: 67 },
+            "EIM": { g11: 31, g12: 33 },
+            "HBC": { g11: 14, g12: 14 }
+        };
+        strandEnrollment = { "2025-2026": JSON.parse(JSON.stringify(defaultStrands)) };
+        // For other years, initialize empty strands (will be filled via Data Admin if needed)
+        for(let yr of schoolYears) {
+            if(yr !== "2025-2026") strandEnrollment[yr] = {};
+        }
+    }
+    initDefaultData();
+    
+    // Persist to localStorage + optional API
+    function persistGlobalData() {
+        const storage = getStoragePayload();
+        localStorage.setItem('dmmhs_master_data', JSON.stringify(storage));
+        syncToServer();
+    }
+    
+    function loadFromLocalStorage() {
+        const saved = localStorage.getItem('dmmhs_master_data');
+        if(saved) {
+            try {
+                applyStoragePayload(JSON.parse(saved));
+                return true;
+            } catch(e) { console.warn(e); }
+        }
+        return false;
+    }
+    if(!loadFromLocalStorage()) persistGlobalData();
+    
+    // Cross-tab sync
+    window.addEventListener('storage', (e) => {
+        if(e.key === 'dmmhs_master_data') {
+            loadFromLocalStorage();
+            if(document.getElementById("appWrapper")?.style.display === "flex") {
+                refreshCurrentViewPreserveState();
+                const sySelector = document.getElementById('sySelector');
+                if(sySelector && currentView === 'dashboard') {
+                    const currentVal = sySelector.value;
+                    sySelector.innerHTML = schoolYears.map(yr => `<option value="${yr}" ${yr === currentVal ? 'selected' : ''}>${yr}</option>`).join('');
+                    sySelector.dispatchEvent(new Event('change'));
+                }
+            }
+        }
+    });
+    
+    function getYearTotals(year) {
+        const idx = schoolYears.indexOf(year);
+        const totalEnrol = enrolleesData[year]?.reduce((a,b)=>a+b,0) || 0;
+        const totalRep = repeatersData[year]?.reduce((a,b)=>a+b,0) || 0;
+        const totalDrop = dropoutsData[year]?.reduce((a,b)=>a+b,0) || 0;
+        const totalJHS = teacherJHS[year]?.reduce((a,b)=>a+b,0) || 0;
+        const totalSHS = (shsAcademic[idx] || 0) + (shsTVL[idx] || 0);
+        return { totalEnrol, totalRep, totalDrop, totalTeachers: totalJHS + totalSHS };
+    }
+    
+    // Add new school year including strand data (optional)
+    function addNewSchoolYear(newYear, enrolArr, dropArr, repArr, teacherJHSArr, shsA, shsT, strandObj = null) {
+        if(schoolYears.includes(newYear)) { alert("School year already exists!"); return false; }
+        schoolYears.push(newYear);
+        schoolYears.sort();
+        enrolleesData[newYear] = enrolArr;
+        dropoutsData[newYear] = dropArr;
+        repeatersData[newYear] = repArr;
+        teacherJHS[newYear] = teacherJHSArr;
+        const idx = schoolYears.indexOf(newYear);
+        shsAcademic.splice(idx, 0, shsA);
+        shsTVL.splice(idx, 0, shsT);
+        if(strandObj) strandEnrollment[newYear] = strandObj;
+        else strandEnrollment[newYear] = {};
+        persistGlobalData();
+        refreshCurrentViewPreserveState();
+        return true;
+    }
+    
+    // Helper to get total SHS per strand for a given year (sum g11+g12)
+    function getStrandTotals(year) {
+        const data = strandEnrollment[year] || {};
+        return strandNames.map(s => {
+            const vals = data[s] || { g11:0, g12:0 };
+            return vals.g11 + vals.g12;
+        });
+    }
+    
+    // Global chart references
+    let currentDashboardChart = null, currentTrendChartGlobal = null;
+    let activeDashboardYear = schoolYears.includes("2025-2026") ? "2025-2026" : schoolYears[schoolYears.length-1];
+    let currentView = "dashboard";
+    
+    if (typeof Chart !== 'undefined') {
+        Chart.defaults.color = '#CBD5E1';
+        Chart.defaults.borderColor = '#334155';
+        Chart.defaults.font.family = 'Inter';
+    }
+
+    function animateCounter(el, endValue) {
+        if (!el) return;
+        const end = Number(endValue) || 0;
+        const start = parseInt(String(el.textContent).replace(/,/g, ''), 10) || 0;
+        const duration = 600;
+        const t0 = performance.now();
+        const step = (t) => {
+            const p = Math.min((t - t0) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(start + (end - start) * eased).toLocaleString();
+            if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    }
+
+    function tickClock() {
+        const now = new Date();
+        const d = document.getElementById('headerDate');
+        const c = document.getElementById('headerClock');
+        if (d) d.textContent = now.toLocaleDateString('en-PH', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' });
+        if (c) c.textContent = now.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    // Theme handling
+    function setTheme(theme) {
+        const body = document.body;
+        if (theme === 'light') { body.classList.add('light-theme'); body.classList.remove('dark-theme'); localStorage.setItem('dmmhs_theme', 'light'); updateThemeIcons('light'); }
+        else { body.classList.remove('light-theme'); body.classList.add('dark-theme'); localStorage.setItem('dmmhs_theme', 'dark'); updateThemeIcons('dark'); }
+        refreshCurrentViewPreserveState();
+    }
+    function updateThemeIcons(theme) { document.querySelectorAll('#themeToggleLabel').forEach(span => { if(span) span.innerText = theme === 'light' ? 'Light' : 'Dark'; }); const loginIcon = document.querySelector('#loginThemeToggle i'); if(loginIcon) loginIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; const dashIcon = document.querySelector('#dashboardThemeToggle i'); if(dashIcon) dashIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; }
+    function refreshCurrentViewPreserveState() {
+        const oldYear = activeDashboardYear;
+        renderView(currentView);
+        if (currentView === 'dashboard') {
+            const newSelector = document.getElementById('sySelector');
+            if (newSelector && oldYear && schoolYears.includes(oldYear)) {
+                newSelector.value = oldYear;
+                activeDashboardYear = oldYear;
+                newSelector.dispatchEvent(new Event('change'));
+            } else if (schoolYears.length && newSelector) {
+                newSelector.value = schoolYears[schoolYears.length - 1];
+                newSelector.dispatchEvent(new Event('change'));
+            }
+        } else if (currentView === 'analytics' || currentView === 'reports') {
+            const id = currentView === 'analytics' ? 'acSYSelector' : 'reportSYSelector';
+            const sel = document.getElementById(id);
+            if (sel && oldYear && schoolYears.includes(oldYear)) sel.value = oldYear;
+        }
+    }
+
+    function openEditCellModal({ title, value, onSave }) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `<div class="modal-card"><h3>${title}</h3><input type="number" id="editCellVal" value="${value}" style="width:100%;padding:0.6rem;margin:1rem 0;background:var(--input-bg);border:1px solid var(--card-border);border-radius:1rem;color:var(--text-primary);"><div style="display:flex;gap:0.8rem;"><button id="editSave" class="btn-primary">Save</button><button id="editCancel" class="btn-secondary">Cancel</button></div></div>`;
+        document.body.appendChild(modal);
+        modal.querySelector('#editSave').onclick = () => { const v = parseInt(modal.querySelector('#editCellVal').value, 10) || 0; onSave(v); modal.remove(); };
+        modal.querySelector('#editCancel').onclick = () => modal.remove();
+    }
+
+    function bindEditableTable(tableId, dataKey, yearCols) {
+        if (!canEdit()) return;
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        table.querySelectorAll('td[data-yr][data-grade]').forEach(td => {
+            td.classList.add('editable-cell');
+            td.title = 'Click to edit';
+            td.onclick = () => {
+                const yr = td.dataset.yr;
+                const gi = parseInt(td.dataset.grade, 10);
+                openEditCellModal({
+                    title: `Edit ${dataKey} — ${grades[gi]} (${yr})`,
+                    value: td.textContent,
+                    onSave: (v) => {
+                        const maps = { enrollees: enrolleesData, dropouts: dropoutsData, repeaters: repeatersData };
+                        const map = maps[dataKey];
+                        if (!map[yr]) map[yr] = Array(6).fill(0);
+                        map[yr][gi] = v;
+                        persistGlobalData();
+                        addLog('edit', `${dataKey} ${grades[gi]} ${yr} = ${v}`);
+                        showToast('Value updated', 'success');
+                        refreshCurrentViewPreserveState();
+                    }
+                });
+            };
+        });
+    }
+
+    function exportJsonBackup() {
+        const blob = new Blob([JSON.stringify(getStoragePayload(), null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `dmmhs_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        addLog('export', 'JSON backup downloaded');
+        showToast('JSON exported', 'success');
+    }
+
+    function exportExcelReport() {
+        if (typeof XLSX === 'undefined') { showToast('Excel library not loaded'); return; }
+        const yr = activeDashboardYear || schoolYears[schoolYears.length - 1];
+        const rows = grades.map((g, i) => ({
+            Grade: g,
+            Enrollment: enrolleesData[yr]?.[i] || 0,
+            Dropouts: dropoutsData[yr]?.[i] || 0,
+            Repeaters: repeatersData[yr]?.[i] || 0
+        }));
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, yr);
+        XLSX.writeFile(wb, `DMMHS_${yr.replace(/-/g, '_')}.xlsx`);
+        addLog('export', `Excel ${yr}`);
+        showToast('Excel exported', 'success');
+    }
+    function initTheme() { const savedTheme = localStorage.getItem('dmmhs_theme'); if (savedTheme === 'light') setTheme('light'); else setTheme('dark'); }
+    
+    function updateDashboardStrandSnapshot(year) {
+        const strandTotals = getStrandTotals(year);
+        const strandDiv = document.getElementById('strandQuickList');
+        const spanEl = document.getElementById('strandYearLabel');
+        if (spanEl) spanEl.innerText = year;
+        if (strandDiv) strandDiv.innerHTML = strandNames.map((s, i) => `<span class="badge">${s}: ${strandTotals[i]}</span>`).join('');
+        const canvas = document.getElementById('strandSummaryChart');
+        if (canvas) {
+            if (window.strandChart) try { window.strandChart.destroy(); } catch (e) {}
+            const tick = getComputedStyle(document.body).getPropertyValue('--chart-tick');
+            window.strandChart = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: { labels: strandNames, datasets: [{ label: 'Total (G11+G12)', data: strandTotals, backgroundColor: 'rgba(56,189,248,0.75)' }] },
+                options: { responsive: true, plugins: { legend: { labels: { color: tick } } }, scales: { y: { ticks: { color: tick } }, x: { ticks: { color: tick } } } }
+            });
+        }
+    }
+
+    function updateDashboardInsights(year) {
+        const latest = getYearTotals(year);
+        const retention = latest.totalEnrol ? ((1 - latest.totalDrop / latest.totalEnrol) * 100).toFixed(1) : '0';
+        const panel = document.getElementById('smartInsights');
+        if (!panel) return;
+        const idx = schoolYears.indexOf(year);
+        const prev = idx > 0 ? schoolYears[idx - 1] : null;
+        const prevTot = prev ? (enrolleesData[prev]?.reduce((a, b) => a + b, 0) || 0) : null;
+        const curTot = latest.totalEnrol;
+        let trendHtml = 'Historical trend data loading…';
+        if (prevTot != null) {
+            const pct = prevTot ? (((curTot - prevTot) / prevTot) * 100).toFixed(1) : 0;
+            trendHtml = `YoY vs ${prev}: <strong>${pct > 0 ? '+' : ''}${pct}%</strong> enrollment change`;
+        }
+        panel.innerHTML = `<h4><i class="fas fa-lightbulb"></i> Executive Insights · ${year}</h4>
+            <div class="insight-item">Retention rate: <strong>${retention}%</strong></div>
+            <div class="insight-item">Student–teacher ratio: <strong>${latest.totalTeachers ? (latest.totalEnrol / latest.totalTeachers).toFixed(1) : '—'}:1</strong></div>
+            <div class="insight-item">${trendHtml}</div>
+            <div class="insight-item">Complete data overview — use tabs for Enrollment, Reports, and Analytics Continuum.</div>`;
+    }
+
+    // DASHBOARD RENDER (adds SHS strand summary card)
+    function renderDashboard(container) {
+        container.className = 'view-enter';
+        const year = activeDashboardYear || schoolYears[schoolYears.length - 1];
+        const latest = getYearTotals(year);
+        const retention = latest.totalEnrol ? ((1 - latest.totalDrop / latest.totalEnrol) * 100).toFixed(1) : '0';
+        container.innerHTML = `
+            <div class="exec-overview">
+                <h3><i class="fas fa-chart-pie"></i> Complete Dashboard Overview</h3>
+                <p>A complete overview of the whole dashboard data for <strong>Diosdado Macapagal Memorial Highschool</strong>. Select a school year below to dynamically filter KPIs, charts, strand snapshot, and linked analytics sections.</p>
+            </div>
+            <div class="global-slicer">
+                <label><i class="fas fa-filter"></i> Global School Year Slicer</label>
+                <select id="sySelector" class="year-selector">${schoolYears.map(yr => `<option value="${yr}" ${yr === activeDashboardYear ? 'selected' : ''}>${yr}</option>`).join('')}</select>
+                <span style="font-size:0.75rem;color:var(--text-secondary);">Filters dashboard KPIs, charts &amp; continuum reports</span>
+            </div>
+            <div class="insights-panel" id="smartInsights"><h4><i class="fas fa-lightbulb"></i> Executive Insights</h4>
+                <div class="insight-item">Retention rate (${year}): <strong>${retention}%</strong></div>
+                <div class="insight-item">Student–teacher ratio: <strong>${latest.totalTeachers ? (latest.totalEnrol / latest.totalTeachers).toFixed(1) : '—'}:1</strong></div>
+                <div class="insight-item" id="insightTrend">Analyzing enrollment trend…</div>
+            </div>
+            <div class="stat-grid"><div class="info-card kpi-card kpi-blue"><div class="kpi-icon"><i class="fas fa-users"></i></div><h4>📚 TOTAL ENROLLEES</h4><div class="value" id="enrolValue">--</div></div><div class="info-card kpi-card kpi-drop"><div class="kpi-icon"><i class="fas fa-user-slash"></i></div><h4>⚠️ DROPOUTS</h4><div class="value" id="dropValue">--</div></div><div class="info-card kpi-card kpi-rep"><div class="kpi-icon"><i class="fas fa-redo-alt"></i></div><h4>🔄 REPEATERS</h4><div class="value" id="repValue">--</div></div><div class="info-card kpi-card kpi-teach"><div class="kpi-icon"><i class="fas fa-chalkboard-teacher"></i></div><h4>👩‍🏫 TEACHERS</h4><div class="value" id="teachValue">--</div></div></div>
+            <div class="info-card"><h4><i class="fas fa-chart-bar"></i> Enrollees by Grade · <span id="selectedYearSpan">${activeDashboardYear}</span></h4><canvas id="gradeDistributionChart"></canvas></div>
+            <div class="info-card"><h4>📈 Historical Enrollment Trend</h4><canvas id="trendCanvasMain"></canvas></div>
+            <div class="info-card"><h4>🏫 SHS Strand Snapshot · <span id="strandYearLabel">${activeDashboardYear}</span></h4>
+                <div class="strand-chart-container"><canvas id="strandSummaryChart" style="max-height:200px;"></canvas></div>
+                <div class="badge-list" id="strandQuickList"></div>
+            </div>
+        `;
+        updateDashboardStrandSnapshot(activeDashboardYear);
+        
+        const ctxTrend = document.getElementById("trendCanvasMain").getContext("2d");
+        if(currentTrendChartGlobal) currentTrendChartGlobal.destroy();
+        const totalsPerYear = schoolYears.map(yr => enrolleesData[yr]?.reduce((a,b)=>a+b,0) || 0);
+        currentTrendChartGlobal = new Chart(ctxTrend, { type:'line', data:{ labels:schoolYears, datasets:[{ label:'Total Enrollees', data:totalsPerYear, borderColor:'#4c8bff', backgroundColor:'rgba(76,139,255,0.1)', fill:true, tension:0.3 }] }, options:{ responsive:true, plugins:{ legend:{ labels:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } }, scales:{ y:{ ticks:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } }, x:{ ticks:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } } } });
+        
+        const selector = document.getElementById("sySelector");
+        const updateForYear = (year) => {
+            if(!enrolleesData[year]) return;
+            if (typeof setGlobalSchoolYear === 'function') setGlobalSchoolYear(year);
+            else activeDashboardYear = year;
+            document.getElementById("selectedYearSpan").innerText = year;
+            updateDashboardStrandSnapshot(year);
+            updateDashboardInsights(year);
+            const totals = getYearTotals(year);
+            const anim = (el) => { el.classList.remove("value-updated"); void el.offsetWidth; el.classList.add("value-updated"); };
+            const ev = document.getElementById("enrolValue"); animateCounter(ev, totals.totalEnrol); anim(ev);
+            const dv = document.getElementById("dropValue"); animateCounter(dv, totals.totalDrop); anim(dv);
+            const rv = document.getElementById("repValue"); animateCounter(rv, totals.totalRep); anim(rv);
+            const tv = document.getElementById("teachValue"); animateCounter(tv, totals.totalTeachers); anim(tv);
+            const gradeData = enrolleesData[year];
+            if(currentDashboardChart) currentDashboardChart.destroy();
+            const ctxBar = document.getElementById("gradeDistributionChart").getContext("2d");
+            const tickColor = getComputedStyle(document.body).getPropertyValue('--chart-tick');
+            currentDashboardChart = new Chart(ctxBar, { type:'bar', data:{ labels:grades, datasets:[{ label:`Enrollees (${year})`, data:gradeData, backgroundColor:'rgba(100,150,255,0.7)', borderRadius:8 }] }, options:{ responsive:true, plugins:{ legend:{ labels:{ color:tickColor } } }, scales:{ y:{ ticks:{ color:tickColor } }, x:{ ticks:{ color:tickColor } } } } });
+        };
+        selector.onchange = (e) => updateForYear(e.target.value);
+        updateForYear(activeDashboardYear);
+    }
+    
+    // SHS STRANDS VIEW: detailed per strand, per grade level
+    function renderSHSStrands(container) {
+        container.className = 'view-enter';
+        let html = `<div class="info-card"><h4><i class="fas fa-layer-group"></i> SHS Strand Enrollments (Grade 11 & 12) per School Year ${canEdit() ? '<span class="role-badge">Editable</span>' : ''}</h4>
+            <select id="strandYearSelector" class="year-selector" style="margin-bottom:1rem;">${schoolYears.map(yr => `<option value="${yr}">${yr}</option>`).join('')}</select>
+            <div id="strandDetailArea"></div>
+        </div>`;
+        container.innerHTML = html;
+        function renderStrandTable(year) {
+            const data = strandEnrollment[year] || {};
+            const tbody = strandNames.map(s => {
+                const vals = data[s] || { g11:0, g12:0 };
+                const editBtn = canEdit() ? `<button class="btn-edit" data-strand="${s}" data-year="${year}"><i class="fas fa-pen"></i></button>` : '';
+                return `<tr><td><b>${s}</b>${editBtn}</td><td>${vals.g11}</td><td>${vals.g12}</td><td>${vals.g11+vals.g12}</td></tr>`;
+            }).join('');
+            const totalG11 = strandNames.reduce((sum,s) => sum + ((strandEnrollment[year]?.[s]?.g11)||0),0);
+            const totalG12 = strandNames.reduce((sum,s) => sum + ((strandEnrollment[year]?.[s]?.g12)||0),0);
+            document.getElementById("strandDetailArea").innerHTML = `
+                <table class="data-table"><thead><tr><th>Strand</th><th>Grade 11</th><th>Grade 12</th><th>Total</th></tr></thead><tbody>${tbody}<tr style="border-top:2px solid var(--card-border);"><td><b>TOTAL</b></td><td><b>${totalG11}</b></td><td><b>${totalG12}</b></td><td><b>${totalG11+totalG12}</b></td></tr></tbody></table>
+                <div class="strand-chart-container"><canvas id="strandGradeChart"></canvas></div>
+            `;
+            const ctx = document.getElementById("strandGradeChart").getContext("2d");
+            if(window.strandDetailChart) window.strandDetailChart.destroy();
+            window.strandDetailChart = new Chart(ctx, { type:'bar', data:{ labels:strandNames, datasets:[{ label:'Grade 11', data:strandNames.map(s=>strandEnrollment[year]?.[s]?.g11||0), backgroundColor:'#4c8bff' }, { label:'Grade 12', data:strandNames.map(s=>strandEnrollment[year]?.[s]?.g12||0), backgroundColor:'#ffa05e' }] }, options:{ responsive:true, plugins:{ legend:{ labels:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } }, scales:{ y:{ ticks:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } }, x:{ ticks:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } } } });
+            document.querySelectorAll('#strandDetailArea .btn-edit').forEach(btn => {
+                btn.onclick = () => {
+                    const s = btn.dataset.strand;
+                    const y = btn.dataset.year;
+                    const cur = strandEnrollment[y]?.[s] || { g11: 0, g12: 0 };
+                    const modal = document.createElement('div');
+                    modal.className = 'modal-overlay';
+                    modal.innerHTML = `<div class="modal-card"><h3>Edit ${s} (${y})</h3><div class="form-grid"><div class="form-field"><label>Grade 11</label><input type="number" id="edG11" value="${cur.g11}"></div><div class="form-field"><label>Grade 12</label><input type="number" id="edG12" value="${cur.g12}"></div></div><button id="strandSave" class="btn-primary" style="margin-top:1rem;">Save</button></div>`;
+                    document.body.appendChild(modal);
+                    modal.querySelector('#strandSave').onclick = () => {
+                        if (!strandEnrollment[y]) strandEnrollment[y] = {};
+                        strandEnrollment[y][s] = { g11: parseInt(modal.querySelector('#edG11').value, 10) || 0, g12: parseInt(modal.querySelector('#edG12').value, 10) || 0 };
+                        persistGlobalData();
+                        addLog('edit', `Strand ${s} ${y}`);
+                        modal.remove();
+                        renderStrandTable(y);
+                        showToast('Strand updated', 'success');
+                    };
+                };
+            });
+        }
+        const selector = document.getElementById("strandYearSelector");
+        selector.addEventListener("change", (e) => renderStrandTable(e.target.value));
+        renderStrandTable(selector.value);
+    }
+    
+    // DATA ADMIN: extended to include strand data input
+    function renderDataAdmin(container) {
+        if (!isAdmin()) {
+            container.innerHTML = `<div class="info-card view-enter"><h4>Access Restricted</h4><p>Data Admin requires an <strong>admin</strong> account. Editors can update values from Enrollment, Dropouts, Repeaters, and SHS Strands views.</p></div>`;
+            return;
+        }
+        container.className = 'view-enter';
+        container.innerHTML = `
+            <div class="info-card" style="margin-bottom:1rem;">
+                <h4><i class="fas fa-cloud-arrow-down"></i> Backup</h4>
+                <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.6rem;">
+                    <button id="exportBackupBtn" class="btn-primary"><i class="fas fa-download"></i> Export JSON</button>
+                    <button id="syncServerBtn" class="btn-secondary"><i class="fas fa-sync"></i> Push to Database</button>
+                </div>
+            </div>
+            <div class="info-card"><h4><i class="fas fa-plus-circle"></i> Add New School Year (with optional strand data)</h4>
+            <p>Fill all fields. New year will sync across all views.</p>
+            <div class="form-field"><label>School Year (e.g., 2026-2027)</label><input type="text" id="newSY" placeholder="2026-2027"></div>
+            <hr><h5>📌 Enrollees per Grade (6 values)</h5><div class="form-grid" id="enrolGrid"></div>
+            <h5>⚠️ Dropouts per Grade</h5><div class="form-grid" id="dropGrid"></div>
+            <h5>🔄 Repeaters per Grade</h5><div class="form-grid" id="repGrid"></div>
+            <h5>👩‍🏫 JHS Teachers (8 subjects)</h5><div class="form-grid" id="teacherGrid"></div>
+            <div class="form-field"><label>SHS Academic Teachers</label><input type="number" id="shsAcademicVal" value="10"></div>
+            <div class="form-field"><label>SHS TVL Teachers</label><input type="number" id="shsTVLVal" value="10"></div>
+            <hr><h5>🏫 SHS Strand Enrollments (optional, for this new year)</h5>
+            <div id="strandInputsContainer"></div>
+            <button id="submitNewYearBtn" class="btn-primary" style="margin-top:1rem;">Add Year & Update</button>
+            <hr><button id="resetDefaultDataBtn" class="btn-secondary">Reset to Original Default Data</button>
+            </div>
+        `;
+        function buildNumberGrid(containerId, count, defaultVal=0) {
+            const grid = document.getElementById(containerId);
+            grid.innerHTML = '';
+            for(let i=0; i<count; i++) {
+                const div = document.createElement('div'); div.className = 'form-field';
+                div.innerHTML = `<label>${grades[i] || `Index ${i+1}`}</label><input type="number" value="${defaultVal}" step="1">`;
+                grid.appendChild(div);
+            }
+        }
+        buildNumberGrid('enrolGrid', 6, 0);
+        buildNumberGrid('dropGrid', 6, 0);
+        buildNumberGrid('repGrid', 6, 0);
+        const teacherGrid = document.getElementById('teacherGrid');
+        teacherGrid.innerHTML = '';
+        jhsSubjects.forEach(sub => { const div = document.createElement('div'); div.className='form-field'; div.innerHTML=`<label>${sub}</label><input type="number" value="5">`; teacherGrid.appendChild(div); });
+        
+        const strandContainer = document.getElementById("strandInputsContainer");
+        strandContainer.innerHTML = strandNames.map(s => `<div style="border:1px solid var(--card-border); border-radius:1rem; padding:0.5rem; margin-bottom:0.5rem;"><b>${s}</b><div class="form-grid"><div class="form-field"><label>G11</label><input type="number" id="strand_g11_${s.replace(/\//g,'')}" value="0"></div><div class="form-field"><label>G12</label><input type="number" id="strand_g12_${s.replace(/\//g,'')}" value="0"></div></div></div>`).join('');
+        
+        document.getElementById('submitNewYearBtn').onclick = () => {
+            const newYear = document.getElementById('newSY').value.trim();
+            if(!newYear || schoolYears.includes(newYear)) { alert("Unique school year required"); return; }
+            const enrolVals = [...document.querySelectorAll('#enrolGrid input')].map(inp => parseInt(inp.value) || 0);
+            const dropVals = [...document.querySelectorAll('#dropGrid input')].map(inp => parseInt(inp.value) || 0);
+            const repVals = [...document.querySelectorAll('#repGrid input')].map(inp => parseInt(inp.value) || 0);
+            const teacherVals = [...document.querySelectorAll('#teacherGrid input')].map(inp => parseInt(inp.value) || 0);
+            const shsA = parseInt(document.getElementById('shsAcademicVal').value) || 0;
+            const shsT = parseInt(document.getElementById('shsTVLVal').value) || 0;
+            const strandObj = {};
+            for(let s of strandNames) {
+                const g11 = parseInt(document.getElementById(`strand_g11_${s.replace(/\//g,'')}`).value) || 0;
+                const g12 = parseInt(document.getElementById(`strand_g12_${s.replace(/\//g,'')}`).value) || 0;
+                strandObj[s] = { g11, g12 };
+            }
+            addNewSchoolYear(newYear, enrolVals, dropVals, repVals, teacherVals, shsA, shsT, strandObj);
+            addLog('add_year', `School year ${newYear} created`);
+            showToast(`School year ${newYear} added with strand data.`, 'success');
+            document.querySelector('.nav-item[data-view="dashboard"]').click();
+        };
+        document.getElementById('resetDefaultDataBtn').onclick = () => {
+            showConfirm("Reset all data to original defaults?", () => {
+                initDefaultData();
+                schoolYears = ["2021-2022","2022-2023","2023-2024","2024-2025","2025-2026"];
+                persistGlobalData();
+                addLog('reset', 'Default data restored');
+                refreshCurrentViewPreserveState();
+                showToast('Data reset to defaults', 'success');
+                if(currentView === 'dataAdmin') renderDataAdmin(document.getElementById("dynamicView"));
+            });
+        };
+        document.getElementById('exportBackupBtn').onclick = exportJsonBackup;
+        document.getElementById('syncServerBtn').onclick = async () => {
+            await syncToServer();
+            showToast('Database sync attempted', 'success');
+        };
+    }
+
+    function renderAnalytics(container) {
+        if (typeof renderAnalyticsContinuum === 'function') {
+            renderAnalyticsContinuum(container);
+            return;
+        }
+        container.innerHTML = '<div class="info-card"><p>Analytics module loading… Reload the page if this persists.</p></div>';
+    }
+
+    function renderLogs(container) {
+        container.className = 'view-enter';
+        const rows = activityLogs.slice(0, 80).map(l =>
+            `<tr><td>${new Date(l.timestamp).toLocaleString()}</td><td>${l.user}</td><td><span class="role-badge">${l.role}</span></td><td>${l.action}</td><td>${l.details || ''}</td></tr>`
+        ).join('');
+        container.innerHTML = `<div class="info-card"><h4><i class="fas fa-history"></i> Activity Logs</h4><table class="data-table"><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Details</th></tr></thead><tbody>${rows || '<tr><td colspan="5">No activity yet</td></tr>'}</tbody></table></div>`;
+    }
+
+    async function renderUsers(container) {
+        container.className = 'view-enter';
+        if (!isAdmin()) {
+            container.innerHTML = `<div class="info-card"><h4>Admin Only</h4><p>User management requires administrator privileges.</p></div>`;
+            return;
+        }
+        let users = [];
+        try {
+            if (authToken) users = await apiFetch('/api/users');
+        } catch { showToast('Load users failed — is the server running?'); }
+        const rows = users.map(u =>
+            `<tr><td>${u.email}</td><td>${u.name || '—'}</td><td>${u.role}</td><td><button class="btn-edit" data-id="${u.id}" data-email="${u.email}" data-role="${u.role}" data-name="${u.name || ''}">Edit</button> <button class="btn-danger" data-del="${u.id}">Delete</button></td></tr>`
+        ).join('');
+        container.innerHTML = `
+            <div class="info-card"><h4><i class="fas fa-users-cog"></i> User Management</h4>
+            <div class="form-grid" style="margin-bottom:1rem;">
+                <div class="form-field"><label>Email</label><input id="newUserEmail" type="email" placeholder="user@dmmhs.edu.ph"></div>
+                <div class="form-field"><label>Password</label><input id="newUserPass" type="password"></div>
+                <div class="form-field"><label>Role</label><select id="newUserRole"><option value="viewer">viewer</option><option value="editor">editor</option><option value="admin">admin</option></select></div>
+                <div class="form-field"><label>Name</label><input id="newUserName" type="text"></div>
+            </div>
+            <button id="addUserBtn" class="btn-primary">Add User</button>
+            <hr>
+            <table class="data-table"><thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table>
+            </div>`;
+        document.getElementById('addUserBtn').onclick = async () => {
+            try {
+                await apiFetch('/api/users', { method: 'POST', body: JSON.stringify({
+                    email: document.getElementById('newUserEmail').value,
+                    password: document.getElementById('newUserPass').value,
+                    role: document.getElementById('newUserRole').value,
+                    name: document.getElementById('newUserName').value
+                })});
+                showToast('User created', 'success');
+                renderUsers(container);
+            } catch (e) { showToast(e.message); }
+        };
+        container.querySelectorAll('[data-del]').forEach(btn => {
+            btn.onclick = () => showConfirm('Delete this user?', async () => {
+                await apiFetch(`/api/users/${btn.dataset.del}`, { method: 'DELETE' });
+                renderUsers(container);
+            });
+        });
+        container.querySelectorAll('.btn-edit[data-id]').forEach(btn => {
+            btn.onclick = () => {
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `<div class="modal-card"><h3>Edit ${btn.dataset.email}</h3>
+                    <div class="form-field"><label>Role</label><select id="euRole"><option ${btn.dataset.role==='viewer'?'selected':''}>viewer</option><option ${btn.dataset.role==='editor'?'selected':''}>editor</option><option ${btn.dataset.role==='admin'?'selected':''}>admin</option></select></div>
+                    <div class="form-field"><label>Name</label><input id="euName" value="${btn.dataset.name}"></div>
+                    <div class="form-field"><label>New password (optional)</label><input id="euPass" type="password"></div>
+                    <button id="euSave" class="btn-primary">Save</button></div>`;
+                document.body.appendChild(modal);
+                modal.querySelector('#euSave').onclick = async () => {
+                    const body = { role: modal.querySelector('#euRole').value, name: modal.querySelector('#euName').value };
+                    const p = modal.querySelector('#euPass').value;
+                    if (p) body.password = p;
+                    await apiFetch(`/api/users/${btn.dataset.id}`, { method: 'PATCH', body: JSON.stringify(body) });
+                    modal.remove();
+                    renderUsers(container);
+                };
+            };
+        });
+    }
+    
+    // Simplified render functions for other views (kept dynamic)
+    function renderEnrollment(container) { container.className = 'view-enter'; let html = `<div class="info-card"><h4>Enrollees by Grade ${canEdit() ? '<span class="role-badge">Click cells to edit</span>' : ''}</h4><div class="table-scroll"><table class="data-table" id="tblEnrol"><thead><tr><th>Grade</th>${schoolYears.map(yr=>`<th>${yr}</th>`).join('')}</tr></thead><tbody>`; for(let g=0;g<grades.length;g++){ html+=`<tr><td><b>${grades[g]}</b></td>`; for(let yr of schoolYears) html+=`<td data-yr="${yr}" data-grade="${g}">${enrolleesData[yr]?.[g]||0}</td>`; html+=`</tr>`; } html+=`</tbody></table></div><div class="info-card"><h4>Total Enrollment Trend</h4><canvas id="enrolTrendView"></canvas></div>`; container.innerHTML=html; bindEditableTable('tblEnrol', 'enrollees'); const totals = schoolYears.map(yr=>enrolleesData[yr]?.reduce((a,b)=>a+b,0)||0); new Chart(document.getElementById("enrolTrendView").getContext("2d"), { type:'bar', data:{ labels:schoolYears, datasets:[{ label:'Total Enrolment', data:totals, backgroundColor:'#6fa8ff' }] }, options:{ plugins:{ legend:{ labels:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } } } }); }
+    function renderDropouts(container) { container.className = 'view-enter'; let html = `<div class="info-card"><h4>Dropouts per Grade ${canEdit() ? '<span class="role-badge">Click cells to edit</span>' : ''}</h4><div class="table-scroll"><table class="data-table" id="tblDrop"><thead><tr><th>Grade</th>${schoolYears.map(yr=>`<th>${yr}</th>`).join('')}</tr></thead><tbody>`; for(let g=0;g<grades.length;g++){ html+=`<tr><td><b>${grades[g]}</b></td>`; for(let yr of schoolYears) html+=`<td data-yr="${yr}" data-grade="${g}">${dropoutsData[yr]?.[g]||0}</td>`; html+=`</tr>`; } html+=`</tbody></table></div><div class="info-card"><h4>Total Dropouts Trend</h4><canvas id="dropViewChart"></canvas></div>`; container.innerHTML=html; bindEditableTable('tblDrop', 'dropouts'); const totals = schoolYears.map(yr=>dropoutsData[yr]?.reduce((a,b)=>a+b,0)||0); new Chart(document.getElementById("dropViewChart").getContext("2d"), { type:'line', data:{ labels:schoolYears, datasets:[{ label:'Dropouts', data:totals, borderColor:'#ff8a7a' }] }, options:{ plugins:{ legend:{ labels:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } } } }); }
+    function renderRepeaters(container) { container.className = 'view-enter'; let html = `<div class="info-card"><h4>Repeaters per Grade ${canEdit() ? '<span class="role-badge">Click cells to edit</span>' : ''}</h4><div class="table-scroll"><table class="data-table" id="tblRep"><thead><tr><th>Grade</th>${schoolYears.map(yr=>`<th>${yr}</th>`).join('')}</tr></thead><tbody>`; for(let g=0;g<grades.length;g++){ html+=`<tr><td><b>${grades[g]}</b></td>`; for(let yr of schoolYears) html+=`<td data-yr="${yr}" data-grade="${g}">${repeatersData[yr]?.[g]||0}</td>`; html+=`</tr>`; } html+=`</tbody></table></div><div class="info-card"><h4>Total Repeaters Trend</h4><canvas id="repViewChart"></canvas></div>`; container.innerHTML=html; bindEditableTable('tblRep', 'repeaters'); const totals = schoolYears.map(yr=>repeatersData[yr]?.reduce((a,b)=>a+b,0)||0); new Chart(document.getElementById("repViewChart").getContext("2d"), { type:'line', data:{ labels:schoolYears, datasets:[{ label:'Repeaters', data:totals, borderColor:'#f9c74f' }] }, options:{ plugins:{ legend:{ labels:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } } } }); }
+    function renderTeachers(container) { let html = `<div class="info-card"><h4>JHS Teachers per Subject (Latest: ${schoolYears[schoolYears.length-1]})</h4><div class="badge-list">${jhsSubjects.map((sub,i)=>`<span class="badge">${sub}: ${teacherJHS[schoolYears[schoolYears.length-1]]?.[i]||0}</span>`).join('')}</div></div><div class="info-card"><h4>SHS Teachers</h4><table class="data-table"><tr><th>SY</th><th>Academic</th><th>TVL</th></tr>${schoolYears.map((yr,idx)=>`<tr><td>${yr}</td><td>${shsAcademic[idx]||0}</td><td>${shsTVL[idx]||0}</td></tr>`).join('')}</table></div><div class="info-card"><h4>JHS Teacher Trend</h4><canvas id="teacherTrendChart"></canvas></div>`; container.innerHTML=html; const totalsJHS = schoolYears.map(yr=>teacherJHS[yr]?.reduce((a,b)=>a+b,0)||0); new Chart(document.getElementById("teacherTrendChart").getContext("2d"), { type:'line', data:{ labels:schoolYears, datasets:[{ label:'JHS Teachers Total', data:totalsJHS, borderColor:'#7bc9ff' }] }, options:{ plugins:{ legend:{ labels:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } } } }); }
+    function renderReports(container) {
+        if (typeof renderReportsContinuum === 'function') {
+            renderReportsContinuum(container);
+            return;
+        }
+        const latestYear = schoolYears[schoolYears.length - 1];
+        const latest = getYearTotals(latestYear);
+        container.innerHTML = `<div class="info-card"><h4>Performance Summary ${latestYear}</h4><table class="data-table"><tr><th>Metric</th><th>Value</th></tr><tr><td>Retention Rate</td><td>${((1 - latest.totalDrop/latest.totalEnrol)*100).toFixed(1)}%</td></tr><tr><td>Repeater Incidence</td><td>${((latest.totalRep/latest.totalEnrol)*100).toFixed(1)}%</td></tr><tr><td>Student-Teacher Ratio</td><td>${(latest.totalEnrol/latest.totalTeachers).toFixed(1)}:1</td></tr></table></div><div class="info-card"><h4>Comparison Trend</h4><canvas id="compChartReports"></canvas></div>`;
+        const totalsEnrol = schoolYears.map(yr=>enrolleesData[yr]?.reduce((a,b)=>a+b,0)||0);
+        const totalsDrop = schoolYears.map(yr=>dropoutsData[yr]?.reduce((a,b)=>a+b,0)||0);
+        const totalsRep = schoolYears.map(yr=>repeatersData[yr]?.reduce((a,b)=>a+b,0)||0);
+        new Chart(document.getElementById("compChartReports").getContext("2d"), { type:'line', data:{ labels:schoolYears, datasets:[{ label:'Enrollees', data:totalsEnrol, borderColor:'#4c8bff' }, { label:'Dropouts', data:totalsDrop, borderColor:'#ff7b6b' }, { label:'Repeaters', data:totalsRep, borderColor:'#f9c74f' }] }, options:{ plugins:{ legend:{ labels:{ color:getComputedStyle(document.body).getPropertyValue('--chart-tick') } } } } });
+    }
+    function renderSettings(container) {
+        container.className = 'view-enter';
+        container.innerHTML = `<div class="info-card"><h4>⚙️ Theme &amp; Preferences</h4>
+            <p><button id="settingsThemeBtn" class="theme-toggle-btn"><i class="fas fa-adjust"></i> Toggle Light/Dark Mode</button></p>
+            <p>Role: <strong>${currentUser.role}</strong> <span class="role-badge">${currentUser.role === 'admin' ? 'Full Access' : currentUser.role === 'editor' ? 'Edit Data' : 'View Only'}</span></p>
+            <p>Account: ${currentUser.email || localStorage.getItem('rememberedEmail') || '—'}</p>
+            <p>Data persists in localStorage and syncs to SQLite when the API server is running.</p>
+            <button id="clearRememberBtn" class="logout-side">Clear saved email</button>
+            <button id="clearCacheBtn" class="btn-secondary" style="margin-left:0.5rem;">Reset local cache</button>
+        </div>`;
+        document.getElementById("settingsThemeBtn")?.addEventListener("click", () => { setTheme(document.body.classList.contains('light-theme') ? 'dark' : 'light'); });
+        document.getElementById("clearRememberBtn")?.addEventListener("click", () => { localStorage.removeItem('rememberedEmail'); localStorage.setItem('rememberFlag', 'false'); showToast('Credentials cleared'); });
+        document.getElementById("clearCacheBtn")?.addEventListener("click", () => showConfirm('Clear all local cache and reload?', () => { localStorage.removeItem('dmmhs_master_data'); location.reload(); }));
+    }
+    
+    function renderView(view) {
+        const container = document.getElementById("dynamicView");
+        if(currentDashboardChart) { try{ currentDashboardChart.destroy(); }catch(e){} currentDashboardChart=null; }
+        if(currentTrendChartGlobal) { try{ currentTrendChartGlobal.destroy(); }catch(e){} currentTrendChartGlobal=null; }
+        if(window.strandChart) { try{ window.strandChart.destroy(); }catch(e){} }
+        if(window.strandDetailChart) { try{ window.strandDetailChart.destroy(); }catch(e){} }
+        if (typeof destroyACCharts === 'function') destroyACCharts();
+        if(view === "dashboard") renderDashboard(container);
+        else if(view === "enrollment") renderEnrollment(container);
+        else if(view === "dropouts") renderDropouts(container);
+        else if(view === "repeaters") renderRepeaters(container);
+        else if(view === "teachers") renderTeachers(container);
+        else if(view === "shsstrands") renderSHSStrands(container);
+        else if(view === "reports") renderReports(container);
+        else if(view === "analytics") renderAnalytics(container);
+        else if(view === "logs") renderLogs(container);
+        else if(view === "dataAdmin") renderDataAdmin(container);
+        else if(view === "users") renderUsers(container);
+        else if(view === "settings") renderSettings(container);
+        else renderDashboard(container);
+        container.classList.add('view-enter');
+        const titles = { dashboard: 'Executive Dashboard', analytics: 'Analytics Continuum', reports: 'School Performance Reports', dataAdmin: 'Data Admin', shsstrands: 'SHS Strands' };
+        document.getElementById("currentPageTitle").innerText = titles[view] || view.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+    }
+    
+    // Authentication (API + demo fallback)
+    const loginPageWrap=document.getElementById("loginPageWrap"), loginCard=document.getElementById("loginCard"), appWrapper=document.getElementById("appWrapper"), emailInp=document.getElementById("emailInput"), pwdInp=document.getElementById("passwordInput"), rememberChk=document.getElementById("rememberCheck"), togglePwd=document.getElementById("togglePwdIcon"), loginError=document.getElementById("loginError");
+    function showDashboardUI() { loginPageWrap?.classList.add('hidden'); document.body.classList.add('app-active'); appWrapper.style.display = 'flex'; tickClock(); }
+    function showLoginUI() { loginPageWrap?.classList.remove('hidden'); document.body.classList.remove('app-active'); appWrapper.style.display = 'none'; }
+    let pwdVisible=false; togglePwd.addEventListener("click",()=>{ pwdVisible=!pwdVisible; pwdInp.type=pwdVisible?"text":"password"; togglePwd.className=pwdVisible?"fas fa-eye toggle-pwd":"fas fa-eye-slash toggle-pwd"; });
+    function loadRemembered(){ const saved=localStorage.getItem('rememberedEmail'); if(localStorage.getItem('rememberFlag')==='true' && saved){ emailInp.value=saved; rememberChk.checked=true; } } loadRemembered();
+
+    async function doLogin(email, pwd) {
+        if (!email || !pwd || !email.includes('@')) {
+            loginError.innerText = "Valid email & password required";
+            loginError.style.display = "block";
+            return false;
+        }
+        loginError.style.display = "none";
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email.trim().toLowerCase(), password: pwd })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('dmmhs_auth_token', authToken);
+                localStorage.setItem('dmmhs_current_user', JSON.stringify(currentUser));
+                await loadFromServer();
+            } else {
+                const err = await res.json().catch(() => ({}));
+                loginError.innerText = err.error || 'Invalid email or password';
+                loginError.style.display = 'block';
+                return false;
+            }
+        } catch {
+            if (IS_OFFLINE_FILE) {
+                if (email.includes('admin')) currentUser = { email, role: 'admin', name: 'Demo Admin' };
+                else if (email.includes('editor')) currentUser = { email, role: 'editor', name: 'Demo Editor' };
+                else currentUser = { email, role: 'viewer', name: 'Demo Viewer' };
+                authToken = null;
+                localStorage.removeItem('dmmhs_auth_token');
+                localStorage.setItem('dmmhs_current_user', JSON.stringify(currentUser));
+                updateSyncBadge(false, 'Offline demo mode');
+                showToast('Offline demo mode', 'info');
+            } else {
+                loginError.innerText = 'Cannot reach database server — run OPEN-DASHBOARD.bat';
+                loginError.style.display = 'block';
+                return false;
+            }
+        }
+        if (rememberChk.checked) { localStorage.setItem('rememberedEmail', email); localStorage.setItem('rememberFlag', 'true'); }
+        else { localStorage.removeItem('rememberedEmail'); localStorage.setItem('rememberFlag', 'false'); }
+        showDashboardUI();
+        updateUserPill();
+        addLog('login', `Signed in as ${currentUser.role}`);
+        renderView(currentView);
+        showToast(`Welcome, ${currentUser.name || currentUser.email}`, 'success');
+        return true;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => { e.preventDefault(); doLogin(emailInp.value.trim(), pwdInp.value); });
+    document.getElementById("forgotLink")?.addEventListener("click", (e) => { e.preventDefault(); showToast('Contact admin: admin@dmmhs.edu.ph'); });
+
+    function logout() {
+        authToken = null;
+        currentUser = { email: '', role: 'viewer', name: '' };
+        localStorage.removeItem('dmmhs_auth_token');
+        localStorage.removeItem('dmmhs_current_user');
+        showLoginUI();
+        pwdInp.value = "";
+        updateUserPill();
+    }
+
+    document.getElementById("btnPrint")?.addEventListener("click", () => window.print());
+    document.getElementById("btnExportJson")?.addEventListener("click", exportJsonBackup);
+    document.getElementById("btnExportExcel")?.addEventListener("click", exportExcelReport);
+    document.getElementById("logoutSidebarBtn").addEventListener("click",logout); document.getElementById("logoutTopBtn")?.addEventListener("click",logout);
+    document.querySelectorAll(".nav-item").forEach(item=>{ item.addEventListener("click",()=>{ document.querySelectorAll(".nav-item").forEach(nav=>nav.classList.remove("active")); item.classList.add("active"); currentView = item.getAttribute("data-view"); renderView(currentView); if(window.innerWidth<=780) document.getElementById("sidebar")?.classList.remove("show"); }); });
+    document.getElementById("mobileMenuToggle")?.addEventListener("click",()=>{ document.getElementById("sidebar")?.classList.toggle("show"); });
+    window.addEventListener("resize",()=>{ if(window.innerWidth>780) document.getElementById("sidebar")?.classList.remove("show"); });
+    document.getElementById("dashboardThemeToggle")?.addEventListener("click", () => { const newTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light'; setTheme(newTheme); });
+    document.getElementById("loginThemeToggle")?.addEventListener("click", () => { const newTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light'; setTheme(newTheme); });
+    initTheme();
+    updateUserPill();
+    tickClock();
+    setInterval(tickClock, 1000);
+    // Auto-launch dashboard on page load for direct dashboard access
+    showDashboardUI();
+    renderView(currentView);
+    document.getElementById('btnNotif')?.addEventListener('click', () => showToast('No new notifications', 'info'));
+    document.getElementById('sidebarCollapse')?.addEventListener('click', () => {
+        const sb = document.getElementById('sidebar');
+        sb?.classList.toggle('collapsed');
+        document.getElementById('appWrapper')?.classList.toggle('sidebar-collapsed');
+        const icon = document.querySelector('#sidebarCollapse i');
+        if (icon) icon.className = sb?.classList.contains('collapsed') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+    });
+    window.addEventListener('dmmhs:yearchange', (e) => {
+        const y = e.detail?.year;
+        const main = document.getElementById('mainContent');
+        if (!main || !y) return;
+        if (currentView === 'analytics' && typeof renderAnalyticsContinuum === 'function') renderAnalyticsContinuum(main);
+        else if (currentView === 'reports' && typeof renderReportsContinuum === 'function') renderReportsContinuum(main);
+    });
+
+    async function initSession() {
+        showLoginUI();
+        if (IS_OFFLINE_FILE) {
+            updateSyncBadge(false, 'Offline file — sign in to continue');
+            if (currentUser?.email) {
+                showDashboardUI();
+                updateUserPill();
+                renderView(currentView);
+            }
+            return;
+        }
+        try {
+            const healthRes = await fetch(`${API_BASE}/api/health`);
+            if (healthRes.ok) {
+                const health = await healthRes.json();
+                updateSyncBadge(true, health.database === 'sqlite' ? 'SQLite database ready' : 'API ready');
+                if (authToken && currentUser?.email) {
+                    const loaded = await loadFromServer();
+                    if (loaded) {
+                        showDashboardUI();
+                        updateUserPill();
+                        renderView(currentView);
+                        return;
+                    }
+                    authToken = null;
+                    localStorage.removeItem('dmmhs_auth_token');
+                }
+            } else {
+                updateSyncBadge(false, 'Server error — use demo login');
+            }
+        } catch {
+            updateSyncBadge(false, 'Run OPEN-DASHBOARD.bat for database server');
+        }
+        showLoginUI();
+    }
+
+    initSession();
+</script>
+</body>
+</html>

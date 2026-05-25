@@ -1,0 +1,417 @@
+/* ========== ENHANCED ANIMATIONS & GLASS EFFECTS ========== */
+
+/* Smooth Loading Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Apply Animations to Dashboard Elements */
+.view-enter {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.kpi-card {
+    animation: scaleIn 0.4s ease-out;
+    animation-fill-mode: backwards;
+}
+
+.kpi-card:nth-child(1) { animation-delay: 0.05s; }
+.kpi-card:nth-child(2) { animation-delay: 0.10s; }
+.kpi-card:nth-child(3) { animation-delay: 0.15s; }
+.kpi-card:nth-child(4) { animation-delay: 0.20s; }
+.kpi-card:nth-child(5) { animation-delay: 0.25s; }
+.kpi-card:nth-child(6) { animation-delay: 0.30s; }
+
+/* Enhanced KPI Cards */
+.kpi-card {
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(59, 130, 246, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.kpi-card:hover::before {
+    left: 100%;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.3);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-color) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glowPulse 3s infinite;
+}
+
+/* Chart Container Animations */
+.chart-card {
+    animation: fadeInUp 0.5s ease-out;
+    transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.chart-wrapper canvas {
+    transition: all 0.3s ease;
+}
+
+/* Chart Loading Animation */
+.chart-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+/* Progress Bar Animation */
+.progress-bar-fill {
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+/* Number Counter Animation */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.value-updated {
+    animation: countUp 0.4s ease-out;
+}
+
+/* Hover Glow Effects */
+.btn-primary, .btn-secondary, .theme-toggle-btn, .logout-side {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover, .theme-toggle-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    animation: glowPulse 1s infinite;
+}
+
+/* Sidebar Hover Animation */
+.nav-item {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.nav-item:hover {
+    transform: translateX(5px);
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.nav-item.active {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, transparent 100%);
+    border-left: 3px solid var(--primary-color);
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--primary-color);
+    animation: pulse 1s infinite;
+}
+
+/* Slicer Bar Animation */
+.slicer-bar {
+    animation: fadeInLeft 0.4s ease-out;
+}
+
+.year-selector {
+    transition: all 0.2s ease;
+}
+
+.year-selector:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.02);
+}
+
+/* Insights Panel */
+.insights-row {
+    animation: fadeInRight 0.4s ease-out;
+}
+
+.insight-item {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.insight-item:hover {
+    transform: translateX(5px);
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+/* Stat Cards Animation */
+.info-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: scaleIn 0.4s ease-out;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Floating Action Button Animation */
+.fab {
+    animation: float 3s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.fab:hover {
+    transform: scale(1.15) rotate(90deg);
+}
+
+/* Table Row Animations */
+.data-table tbody tr {
+    transition: all 0.2s ease;
+    animation: fadeInUp 0.3s ease-out;
+    animation-fill-mode: backwards;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.1);
+    transform: scale(1.01);
+}
+
+/* Toast Notification Animation */
+.toast-notify {
+    animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* Modal Animation */
+.modal-overlay {
+    animation: fadeInUp 0.2s ease-out;
+}
+
+.modal-card {
+    animation: scaleIn 0.2s ease-out;
+}
+
+/* Loading Skeleton Enhancement */
+.skeleton {
+    background: linear-gradient(90deg, var(--glass-bg) 25%, var(--border-color) 50%, var(--glass-bg) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 0.5rem;
+}
+
+/* Chart Tooltip Animation */
+.chartjs-tooltip {
+    animation: scaleIn 0.15s ease-out;
+}
+
+/* Pulse Animation for Alerts */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Spin Animation for Loading */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Widget Drag Animation */
+.widget-card {
+    transition: all 0.3s ease;
+}
+
+.widget-card.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+.widget-card.edit-mode {
+    cursor: move;
+}
+
+.widget-card.edit-mode:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Theme Transition */
+body, .kpi-card, .chart-card, .sidebar, .info-card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Responsive Animation Adjustments */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

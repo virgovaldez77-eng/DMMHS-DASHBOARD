@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "email": "admin@dmmhs.edu.ph",
+    "password_hash": "ba41b5a15528af23c7ffc56e9427d229458094baeaaa74c3e73f22160f01d6df",
+    "role": "admin",
+    "name": "System Administrator"
+  },
+  {
+    "id": 2,
+    "email": "editor@dmmhs.edu.ph",
+    "password_hash": "f9ccdf76cc4b57c2ff501050dd28e03c5f2f9e20a5b4718b319a5d30494eed0b",
+    "role": "editor",
+    "name": "Data Editor"
+  },
+  {
+    "id": 3,
+    "email": "viewer@dmmhs.edu.ph",
+    "password_hash": "58cbb6acfda69ac26a1f10837fcc6db429ea64f04b44c5de6e5ed2a5bb802a08",
+    "role": "viewer",
+    "name": "Report Viewer"
+  }
+]
